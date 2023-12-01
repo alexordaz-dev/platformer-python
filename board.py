@@ -1,4 +1,4 @@
-from classes.mario import Mario
+
 import pyxel
 
 
@@ -41,4 +41,4 @@ class Board:
         # Parameters are x, y, and a tuple containing the image bank,
         # the starting x and y and the size
 
-        pyxel.blt(self.mario.x, self.mario.y, *self.mario.idle_sprite)
+
