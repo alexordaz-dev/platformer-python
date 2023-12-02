@@ -13,15 +13,14 @@ class Board:
         self.height = h
 
         # This block initializes pyxel
-        # The first thing to do is to create the screen, see API for more parameters
+        # The first thing to do is to create the screen, see API for
+        # more parameters
         pyxel.init(self.width, self.height,)
         # Loading the pyxres file, it has a 16x16 cat in (0,0) in bank 0
         pyxel.load("assets/sprites.pyxres")
 
-        # This creates a Plane at the middle of the screen in x and at y = 200
-        # Notice the image is stored in the init of plane class, now it is a
-        # cat
-        self.mario = Mario(int(self.width / 2), 200)
+        # this creates the position of something in  the screen
+        # example: self.mario = Mario(int(self.width / 2), 200)
 
         # Running the game
         pyxel.run(self.update, self.draw)
@@ -37,8 +36,7 @@ class Board:
         """ This is executed also each frame, here you should just draw
         things """
         pyxel.cls(0)
-        # We draw the plane taking the values from the plane object
+        # We draw something putting blt taking the values from the  object
         # Parameters are x, y, and a tuple containing the image bank,
-        # the starting x and y and the size
-
-
+        # the starting x and y and the size which we initialize before with
+        # the self. ...
