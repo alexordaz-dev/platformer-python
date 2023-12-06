@@ -1,4 +1,5 @@
-from tuberias import Pipes
+import pyxel
+
 class Board:
 
     """ This class contains all the information needed to represent the
@@ -17,10 +18,10 @@ class Board:
 
         # this creates the position of something in  the screen
         # example: self.mario = Mario(int(self.width / 2), 200)
-        self.pipes = [tuberias(0, 30, "left", "complex"),
-                      tuberias(270, 30, "right", "complex"),
-                      tuberias(0, 168, "left", "simple"),
-                      tuberias(260, 168, "right", "simple")]
+        self.tuberias = [Tuberias(0, 30, "left", "no_straight"),
+                      Tuberias(270, 30, "right", "no_straight"),
+                      Tuberias(0, 168, "left", "straight"),
+                      Tuberias(260, 168, "right", "straight")]
         # Running the game
         pyxel.run(self.update, self.draw)
 
@@ -39,5 +40,8 @@ class Board:
         # Parameters are x, y, and a tuple containing the image bank,
         # the starting x and y and the size which we initialize before with
         # the self. ...
-        pyxel.blt(self.pipes.x, self.pipes.y, *self.pipes.sprite)
+        pyxel.blt(self.tuberias[0].x, self.tuberias[0].y, *self.tuberias[0].sprite)
+        pyxel.blt(self.tuberias[1].x, self.tuberias[1].y, *self.tuberias[1].sprite)
+        pyxel.blt(self.tuberias[2].x, self.tuberias[2].y, *self.tuberias[2].sprite)
+        pyxel.blt(self.tuberias[3].x, self.tuberias[3].y, *self.tuberias[3].sprite)
 
