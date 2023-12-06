@@ -33,11 +33,11 @@ class Board:
         self.floor7 = self.create_floor(188, 150, 16)
 
     def create_floor(self, x, y, count):
-        floor_tiles = []
+        floors = []
         for i in range(count):
-            floor_tiles.append(Floor(x, y))
+            floors.append(Floor(x, y))
             x += 7
-        return floor_tiles
+        return floors
 
     def update(self):
         if pyxel.btnp(pyxel.KEY_Q):
@@ -49,5 +49,5 @@ class Board:
         for tuberia in self.tuberias:
             pyxel.blt(tuberia.x, tuberia.y, *tuberia.sprite)
 
-        for floor_tile in self.floor + self.floor2 + self.floor3 + self.floor4 + self.floor5 + self.floor6 + self.floor7:
-            pyxel.blt(floor_tile.x, floor_tile.y, *floor_tile.sprite)
+        for floors in self.floor + self.floor2 + self.floor3 + self.floor4 + self.floor5 + self.floor6 + self.floor7:
+            pyxel.blt(floors.x, floors.y, *floors.sprite)
