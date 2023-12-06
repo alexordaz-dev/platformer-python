@@ -1,4 +1,5 @@
 import pyxel
+from classes.blocks.tuberias import Tuberias
 
 class Board:
 
