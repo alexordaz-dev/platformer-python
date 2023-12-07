@@ -37,9 +37,7 @@ class Mario:
     @property
     def looking_right(self):
         return self.__looking_right
-    @property
-    def
-
+   
     @property
     def v_y(self):
         return self.__v_y
