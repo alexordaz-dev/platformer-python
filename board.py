@@ -1,7 +1,9 @@
 import pyxel
+
+
 from classes.blocks.tuberias import Tuberias
 from classes.blocks.floor import Floor
-
+import constants as c
 class Board:
 
     def __init__(self, w: int, h: int):
@@ -9,11 +11,11 @@ class Board:
         self.height = h
         pyxel.init(self.width, self.height)
         pyxel.load("assets/sprites.pyxres")
-
         self.initialize_tuberias()
         self.initialize_floor()
-
         pyxel.run(self.update, self.draw)
+
+
 
     def initialize_tuberias(self):
         self.tuberias = [
