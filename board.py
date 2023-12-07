@@ -9,6 +9,7 @@ class Board:
     def __init__(self, w: int, h: int):
         self.width = w
         self.height = h
+        # For mario here we name an object called player
         self.player = mario.Mario(int(w/2), 170)
         pyxel.init(self.width, self.height)
         pyxel.load("assets/sprites.pyxres")
@@ -43,12 +44,14 @@ class Board:
         return floors
 
     def update(self):
-        self.player.update_status(self.player)
+        # For mario we only need to call the update method, this will do all the things for mario
+        self.player.update_status()
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
 
     def draw(self):
         pyxel.cls(0)
+        # For mario we then draw his position and his firs sprite
         pyxel.blt(self.player.x, self.player.y, *self.player.sprite)
 
         for tuberia in self.tuberias:
