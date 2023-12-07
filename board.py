@@ -1,21 +1,22 @@
 import pyxel
-
-
+from classes import mario
 from classes.blocks.tuberias import Tuberias
 from classes.blocks.floor import Floor
-import constants as c
+
+
 class Board:
 
     def __init__(self, w: int, h: int):
         self.width = w
         self.height = h
+        self.player = mario.Mario(int(w/2), 170)
         pyxel.init(self.width, self.height)
         pyxel.load("assets/sprites.pyxres")
         self.initialize_tuberias()
         self.initialize_floor()
+
+
         pyxel.run(self.update, self.draw)
-
-
 
     def initialize_tuberias(self):
         self.tuberias = [
@@ -42,11 +43,13 @@ class Board:
         return floors
 
     def update(self):
+        self.player.update_status(self.player)
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
 
     def draw(self):
         pyxel.cls(0)
+        pyxel.blt(self.player.x, self.player.y, *self.player.sprite)
 
         for tuberia in self.tuberias:
             pyxel.blt(tuberia.x, tuberia.y, *tuberia.sprite)
