@@ -1,5 +1,6 @@
 import pyxel
 
+
 import constants
 import constants as c
 
@@ -92,9 +93,6 @@ class Mario:
         elif not pyxel.btn(pyxel.KEY_D) and not self.__looking_right:
             self.__v_x = min(self.__v_x + c.friction, 0)
             self.__walking = False
-        if pyxel.btn(pyxel.KEY_SPACE):
-            self.mario_is_in_air = True
-            self.__v_y = -c.jump_force
 
     # This is the method that changes mario's position every frame
     def __update_position(self):  # changes the player position
@@ -102,11 +100,8 @@ class Mario:
         self.y += self.__v_y
 
     def __is_colliding(self, entity):
-        if (
-                abs(entity.x - self.x) < entity.width
-                and entity.x - self.width < self.x
-                and abs(entity.y - self.y) < self.height
-        ):  # check for collision
+        if (abs(entity.x - self.x) < entity.width and entity.x - self.width < self.x and
+                abs(entity.y - self.y) < self.height):  # check for collision
             if entity.width == 256 and entity.x + 24 < self.x + self.width:  # check for a cliff
                 return False
             else:
