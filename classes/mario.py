@@ -1,4 +1,6 @@
 import pyxel
+
+import constants
 import constants as c
 
 
@@ -7,6 +9,8 @@ class Mario:
         # Here we initialize all the methods and properties we will be having for mario
         self.x = x
         self.y = y
+        self.width = constants.mario_width
+        self.height = constants.mario_height
         self.__sprite = c.s_mario_standing
         self.__initialize_booleans()
         self.__initialize_forces()
@@ -97,6 +101,58 @@ class Mario:
         self.x += self.__v_x
         self.y += self.__v_y
 
+    def __is_colliding(self, entity):
+        if (
+                abs(entity.x - self.x) < entity.width
+                and entity.x - self.width < self.x
+                and abs(entity.y - self.y) < self.height
+        ):  # check for collision
+            if entity.width == 256 and entity.x + 24 < self.x + self.width:  # check for a cliff
+                return False
+            else:
+                return True
+        else:
+            return False
+
+    def __collide_blocks(self, blocks: list, player):
+        self.__block_to_right = False
+        self.__block_to_left = False
+
+        for block in blocks:
+            collision_top = False
+            collision_bottom = False
+
+            if self.__is_colliding(block):  # check for collision
+                if abs(block.y + block.height - self.y) <= constants.collide and not collision_top:
+                    self.__v_y = 2 * c.gravity
+                    self.y = block.initial_coordinates[1] + block.height
+                    collision_bottom = True
+
+                elif abs(block.y - (self.y + self.height)) <= self.height and not collision_bottom:
+                    collision_top = True
+                    self.in_air = False
+                    self.y = block.y - self.height
+
+                    if pyxel.btn(pyxel.KEY_SPACE):
+                        self.in_air = True
+                        self.__v_y = -constants.jump_force
+                    else:
+                        self.__v_y = 0
+
+            if (
+                    block.x + block.width < self.x < block.x + block.width + 3
+                    and self.y > block.y
+                    and not self.y > block.y + block.height
+            ):
+                self.__v_x = +2
+
+            if (
+                    self.x + self.width < block.x < self.x + self.width + 3
+                    and self.y > block.y
+                    and not self.y > block.y + block.height
+            ):
+                self.__v_x = -2
+
     def __gravity_push(self):
 
         if self.y < pyxel.height:
@@ -130,8 +186,9 @@ class Mario:
 
     # This is the method that groups every method that mario needs to update,
     # this makes it easier to plug it on the board
-    def update_status(self):
+    def update_status(self,blocks:list,player):
         self.__update_animations()
         self.__update_position()
         self.__detect_buttons()
         self.__gravity_push()
+        self.__collide_blocks(blocks,player)

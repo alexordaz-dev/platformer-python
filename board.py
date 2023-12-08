@@ -58,7 +58,7 @@ class Board:
 
     def update(self):
         # For mario we only need to call the update method, this will do all the things for mario
-        self.player.update_status()
+        self.player.update_status(self.__blocks, self.player)
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
 

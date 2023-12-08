@@ -2,8 +2,10 @@
 
 fps = 60
 screen_width = 400
-screen_height = 220
+screen_height = 218
 # ---------------------------------------------------------Hit boxes
+mario_height = 24
+mario_width = 16
 ground_height = screen_height-220 + 204
 
 # ---------------------------------------------------------Mario
@@ -17,7 +19,7 @@ s_mario_walking_l2 = (0, 32, 0, -16, 24)
 s_mario_walking_l3 = (0, 48, 0, -16, 24)
 
 # ---------------------------------------------------------physics
-
+collide = 0.5
 friction = 0.8
 gravity = .25
 jump_force = 5
