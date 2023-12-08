@@ -3,22 +3,22 @@ from classes import mario
 from classes.blocks.pipes import Pipes
 from classes.blocks.floor import Floor
 from classes.blocks.ground import Ground
+import constants
 
 
 class Board:
 
-    def __init__(self, w: int, h: int):
-
-        self.width = w
-        self.height = h
+    def __init__(self, ):
+        self.width = int(constants.screen_width)
+        self.height = int(constants.screen_height)
         # For mario here we name an object called player
-        self.player = mario.Mario(int(w/2), 170)
+        self.player = mario.Mario(int(self.width/2), 170)
         pyxel.init(self.width, self.height)
         pyxel.load("assets/sprites.pyxres")
         self.initialize_pipes()
         self.initialize_floor()
-        self.initialize_ground()
-
+        self. generate_blocks()
+        self.create_ground()
 
         pyxel.run(self.update, self.draw)
 
@@ -45,14 +45,16 @@ class Board:
             floors.append(Floor(x, y))
             x += 7
         return floors
-    def initialize_ground(self):
-        self.ground = self.create_ground(0, 204,  25)
-    def create_ground(self, x, y, count):
-        grounds = []
-        for i in range(count):
-            grounds.append(Ground(x,y))
+
+    def generate_blocks(self):
+        self.__blocks =[
+        ]
+
+    def create_ground(self):
+        x = 0
+        for i in range(25):
+            self.__blocks.append(Ground(x, constants.ground_height))
             x += 16
-        return grounds
 
     def update(self):
         # For mario we only need to call the update method, this will do all the things for mario
@@ -71,5 +73,5 @@ class Board:
         for floors in self.floor + self.floor2 + self.floor3 + self.floor4 + self.floor5 + self.floor6 + self.floor7:
             pyxel.blt(floors.x, floors.y, *floors.sprite)
 
-        for grounds in self.ground:
+        for grounds in self.__blocks:
             pyxel.blt(grounds.x, grounds.y, *grounds.sprite)
