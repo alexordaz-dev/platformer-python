@@ -5,4 +5,4 @@ class Ground:
 
         self.x = x
         self.y = y
-        self.sprite = (0, 119, 175, 16, 16)
+        self.sprite = (0, 119, 176, 16, 16)

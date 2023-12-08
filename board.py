@@ -1,6 +1,6 @@
 import pyxel
 from classes import mario
-from classes.blocks.tuberias import Tuberias
+from classes.blocks.pipes import Pipes
 from classes.blocks.floor import Floor
 from classes.blocks.ground import Ground
 
@@ -8,25 +8,26 @@ from classes.blocks.ground import Ground
 class Board:
 
     def __init__(self, w: int, h: int):
+
         self.width = w
         self.height = h
         # For mario here we name an object called player
         self.player = mario.Mario(int(w/2), 170)
         pyxel.init(self.width, self.height)
         pyxel.load("assets/sprites.pyxres")
-        self.initialize_tuberias()
+        self.initialize_pipes()
         self.initialize_floor()
         self.initialize_ground()
 
 
         pyxel.run(self.update, self.draw)
 
-    def initialize_tuberias(self):
-        self.tuberias = [
-            Tuberias(0, 20, "left", "no_straight"),
-            Tuberias(368, 20, "right", "no_straight"),
-            Tuberias(0, 175, "left", "straight"),
-            Tuberias(358, 175, "right", "straight")
+    def initialize_pipes(self):
+        self.pipes = [
+            Pipes(0, 20, "left", "no_straight"),
+            Pipes(368, 20, "right", "no_straight"),
+            Pipes(0, 175, "left", "straight"),
+            Pipes(358, 175, "right", "straight")
         ]
 
     def initialize_floor(self):
@@ -64,7 +65,7 @@ class Board:
         # For mario we then draw his position and his firs sprite
         pyxel.blt(self.player.x, self.player.y, *self.player.sprite)
 
-        for tuberia in self.tuberias:
+        for tuberia in self.pipes:
             pyxel.blt(tuberia.x, tuberia.y, *tuberia.sprite)
 
         for floors in self.floor + self.floor2 + self.floor3 + self.floor4 + self.floor5 + self.floor6 + self.floor7:
