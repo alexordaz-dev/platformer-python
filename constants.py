@@ -21,7 +21,7 @@ s_mario_walking_l3 = (0, 48, 0, -16, 24)
 # ---------------------------------------------------------physics
 collide = 0.5
 friction = 0.8
-gravity = .25
+gravity = .50
 jump_force = 5
 normal_v = 3
 max_v_x = 3.5
