@@ -9,6 +9,7 @@ import constants
 class Board:
 
     def __init__(self, ):
+        self.__blocks = None
         self.width = int(constants.screen_width)
         self.height = int(constants.screen_height)
         # For mario here we name an object called player
