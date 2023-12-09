@@ -43,18 +43,25 @@ class Board:
     def create_floor(self, x, y, count):
         floors = []
         for i in range(count):
-            floors.append(Floor(x, y))
+            floors.append(Floor(x, y, 1))
             x += 7
         return floors
 
     def generate_blocks(self):
         self.__blocks =[
+            Floor(0, 150, 160),
+            Floor(239, 150, 160),
+            Floor(225,55, 170),
+            Floor(120, 100, 155),
+            Floor(0, 110, 54),
+            Floor(358, 110, 60),
+            Floor(0,55,170)
         ]
 
     def create_ground(self):
         x = 0
         for i in range(25):
-            self.__blocks.append(Ground(x, constants.ground_height))
+            self.__blocks.append(Ground(x,constants.ground_height))
             x += 16
 
     def update(self):

@@ -7,5 +7,5 @@ class Ground:
         self.x = x
         self.y = y
         self.sprite = (0, 119, 176, 16, 16)
-        self.height = pyxel.height / 3
+        self.height = 8
         self.width = pyxel.width

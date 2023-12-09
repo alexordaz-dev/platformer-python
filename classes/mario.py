@@ -114,8 +114,7 @@ class Mario:
             return False
 
     def __collide_blocks(self, blocks: list, player):
-        self.__block_to_right = False
-        self.__block_to_left = False
+        self.lateral_collision = False
 
         for block in blocks:
             collision_top = False
@@ -123,35 +122,39 @@ class Mario:
 
             if self.__is_colliding(block):  # check for collision
                 if abs(block.y + block.height - self.y) <= constants.collide and not collision_top:
-                    self.__v_y = 2 * c.gravity
-                    self.y = block.initial_coordinates[1] + block.height
+                    self.__v_y = constants.collide+0.1
+                    self.y = block.y + block.height
                     collision_bottom = True
 
                 elif abs(block.y - (self.y + self.height)) <= self.height and not collision_bottom:
-                    collision_top = True
-                    self.__mario_in_air = False
-                    self.y = block.y - self.height
 
                     if pyxel.btn(pyxel.KEY_SPACE):
                         self.__mario_in_air = True
+                        
                         self.__v_y = -constants.jump_force
                     else:
+                        collision_top = True
+                        self.__mario_in_air = False
+                        self.y = block.y - self.height
                         self.__v_y = 0
+                if (
+                        block.x + block.width < self.x < block.x + block.width + 3
+                        and self.y + self.height > block.y
+                        and self.y < block.y + block.height
+                ):
+                    self.x = block.x + block.width + 3
+                    lateral_collision = True
 
-            if (
-                    block.x + block.width < self.x < block.x + block.width + 3
-                    and self.y > block.y
-                    and not self.y > block.y + block.height
-            ):
-                self.__v_x = +2
+                if (
+                        self.x + self.width > block.x > self.x + self.width - 3
+                        and self.y + self.height > block.y
+                        and self.y < block.y + block.height
+                ):
+                    self.x = block.x - self.width - 3
+                    lateral_collision = True
 
-            if (
-                    self.x + self.width < block.x < self.x + self.width + 3
-                    and self.y > block.y
-                    and not self.y > block.y + block.height
-            ):
-                self.__v_x = -2
-
+                if self.lateral_collision:
+                    self.__v_x = 0
     def __gravity_push(self):
 
         if self.y < pyxel.height:

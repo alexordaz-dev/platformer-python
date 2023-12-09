@@ -23,10 +23,10 @@ s_mario_jumping_r = (0,64,0,16,24)
 s_mario_jumping_l = (0,64,0,-16,24)
 
 # ---------------------------------------------------------physics
-collide = 0.5
+collide = 3.91
 friction = 0.8
 friction_air = 0.1
-gravity = .90
+gravity = 0.9
 jump_force = 10
 normal_v = 3
 max_v_x = 3.5
