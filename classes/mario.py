@@ -123,7 +123,7 @@ class Mario:
             if self.__is_colliding(block):  # check for collision
                 if abs(block.y + block.height - self.y) <= constants.collide and not collision_top:
                     self.__v_y = constants.collide+0.1
-                    self.y = block.y + block.height
+                    self.y = block.y + block.height+3
                     collision_bottom = True
 
                 elif abs(block.y - (self.y + self.height)) <= self.height and not collision_bottom:
