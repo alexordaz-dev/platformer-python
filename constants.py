@@ -110,8 +110,48 @@ s_bluecrab_angry_4 = (0, 136, 160, 16, 16)
 s_bluecrab_die_1 = (0, 152, 160, 16, 16)
 s_bluecrab_die_2 = (0, 168, 160, 16, 16)
 
+# ---------------------------------------------------------POW
+s_pow_1 = (0, 136, 176, 16, 16)
+s_pow_2 = (0, 152, 176, 16, 16)
+s_pow_3 = (0, 168, 176, 16, 16)
 
+#---------------------------------------------------------Fireball
+s_fireball_1 = (0, 0, 96, 16, 16)
+s_fireball_2 = (0, 16, 96, 16, 16)
+s_fireball_3 = (0, 32, 96, 16, 16)
+s_fireball_4 = (0, 48, 96, 16, 16)
+s_lilfireball_1 = (0, 64, 96, 16, 16)
+s_lilfireball_2 = (0, 80, 96, 16, 16)
+s_lilfireball_3 = (0, 94, 96, 16, 16)
+s_lilfireball_4 = (0, 110, 96, 16, 16)
+s_fourfireball_5 = (0, 126, 96, 16, 16)
+s_breakfireball_1 = (0, 142, 96, 16, 16)
+s_breakfireball_2 = (0, 158, 96, 16, 16)
+s_breakfireball_3 = (0, 174, 96, 16, 16)
 
+s_greenfireball_1 = (0, 0, 96, 16, 16)
+s_greenfireball_2 = (0, 16, 96, 16, 16)
+s_greenrfireball_3 = (0, 32, 96, 16, 16)
+s_greenfireball_4 = (0, 48, 96, 16, 16)
+s_greenlilfireball_1 = (0, 64, 96, 16, 16)
+s_greenlilfireball_2 = (0, 80, 96, 16, 16)
+s_greenlilfireball_3 = (0, 94, 96, 16, 16)
+s_greenlilfireball_4 = (0, 110, 96, 16, 16)
+s_greenfourfireball_5 = (0, 126, 96, 16, 16)
+s_greenbreakfireball_1 = (0, 142, 96, 16, 16)
+s_greenbreakfireball_2 = (0, 158, 96, 16, 16)
+s_greenbreakfireball_3 = (0, 174, 96, 16, 16)
+
+#---------------------------------------------------------coin
+s_coin_1 = (0, 0, 208, 8, 16)
+s_coin_2 = (0, 8, 208, 8, 16)
+s_coin_3 = (0, 16, 208, 8, 16)
+s_coin_4 = (0, 24, 208, 8, 16)
+s_coin_5 = (0, 32, 208, 8, 16)
+s_coin_6 = (0, 40, 208, 8, 16)
+s_coin_7 = (0, 48, 208, 8, 16)
+s_coin_8 = (0, 56, 208, 16, 16)
+s_dollar = (0, 72, 208, 8, 16)
 # ---------------------------------------------------------physics
 collide = 3.91
 friction = 0.8

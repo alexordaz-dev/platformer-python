@@ -3,6 +3,7 @@ from classes import mario
 from classes.blocks.pipes import Pipes
 from classes.blocks.floor import Floor
 from classes.blocks.ground import Ground
+from classes.blocks.pow import Pow1
 import constants
 
 
@@ -20,7 +21,7 @@ class Board:
         self.initialize_floor()
         self. generate_blocks()
         self.create_ground()
-
+        self.pow1 = Pow1(192, 150, 16)
         pyxel.run(self.update, self.draw)
 
     def initialize_pipes(self):
@@ -63,7 +64,6 @@ class Board:
         for i in range(25):
             self.__blocks.append(Ground(x,constants.ground_height))
             x += 16
-
     def update(self):
         # For mario we only need to call the update method, this will do all the things for mario
         self.player.update_status(self.__blocks, self.player)
@@ -74,6 +74,8 @@ class Board:
         pyxel.cls(0)
         # For mario we then draw his position and his firs sprite
         pyxel.blt(self.player.x, self.player.y, *self.player.sprite)
+
+        pyxel.blt(self.pow1.x, self.pow1.y, *self.pow1.sprite)
 
         for tuberia in self.pipes:
             pyxel.blt(tuberia.x, tuberia.y, *tuberia.sprite)
