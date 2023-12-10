@@ -5,15 +5,16 @@ import constants as c
 
 
 class Turtle:
-    def __init__(self, x: int, y: int, ) -> None:
+    def __init__(self, x: int, y: int, __v_x: int, __v_y: int, ) -> None:
         # Here we initialize all the methods and properties we will be having for mario
         self.x = x
         self.y = y
+        self.__v_x = __v_x
+        self.__v_y = __v_y
         self.width = c.NPCS_width
         self.height = c.NPCs_height
-        self.__sprite = c.s_turtle_standing
         self.__initialize_booleans()
-        self.__initialize_forces()
+        self.__initialize_sprint()
 
     @property
     def v_x(self):
@@ -36,44 +37,26 @@ class Turtle:
     def v_y(self):
         return self.__v_y
 
-    @property
-    def sprite(self):
-        return self.__sprite
-
-    @sprite.setter
-    def sprite(self, new_sprite: list):
-        self.__sprite = new_sprite
 
     # Here we initialize the values that ar true or False
     def __initialize_booleans(self):
-        self.__looking_right = True
-        self.__walking = False
         self.__dead = False
         self.__turtle_in_air = False
         self.__stopping = False
-
+        if self.__v_x > 0:
+            self.__looking_right = True
+        else:
+            self.__looking_right = False
+    def __initialize_sprint(self):
+        if self.__looking_right:
+            self.sprite = c.s_turtle_walking_r1
+        else:
+            self.sprite = c.s_turtle_walking_l1
     # Here we initialize the values for the forces x and y acting on mario
-    def __initialize_forces(self):
-        self.__v_x = 2
-        self.__v_y = 2
+
 
         # This is the method that detects every button pressed and stores information to give it to other methods
 
-    def friction(self):
-
-        if self.__v_x != 0 and not self.__turtle_in_air:
-            friction_direction = 1 if self.__v_x > 0 else -1 if self.__v_x < 0 else 0
-            self.__v_x = max(abs(self.__v_x) - c.friction, 0) * friction_direction
-            self.__stopping = True
-            self.__walking = False
-        elif self.__v_x != 0 and self.__turtle_in_air:
-            friction_direction = 1 if self.__v_x > 0 else -1 if self.__v_x < 0 else 0
-            self.__v_x = max(abs(self.__v_x) - c.friction_air, 0) * friction_direction
-            self.__stopping = True
-            self.__walking = False
-        else:
-             self.__walking = False
-             self.__stopping = False
 
     # This is the method that changes mario's position every frame
     def __update_position(self):  # changes the player position
@@ -121,7 +104,7 @@ class Turtle:
         else:
             if self.__turtle_in_air:
                 self.sprite = c.s_turtle_standing_l
-            elif self.__walking:
+            else:
                 if self.sprite != c.s_turtle_walking_l1 and pyxel.frame_count % (c.fps / 30) == 0:
                     self.sprite = c.s_turtle_walking_l1
                 elif self.sprite != c.s_turtle_walking_l2 and pyxel.frame_count % (c.fps / 30) == 0:

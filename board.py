@@ -18,7 +18,7 @@ class Board:
         self.height = int(constants.screen_height)
         # For mario here we name an object called player
         self.player = mario.Mario(int(self.width/2), 170)
-        self.turtle = [Turtle(40, 10), Turtle(140, 10)]
+        self.turtle = [Turtle(40, 10, 2, 2), Turtle(140, 10, -2, 2)]
         pyxel.init(self.width, self.height)
         pyxel.load("assets/sprites.pyxres")
         self.initialize_pipes()
