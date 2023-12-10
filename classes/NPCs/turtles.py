@@ -60,8 +60,13 @@ class Turtle:
 
     # This is the method that changes mario's position every frame
     def __update_position(self):  # changes the player position
-        self.x += self.__v_x
-        self.y += self.__v_y
+        if self.x > c.screen_width:
+            self.x = 0
+        elif self.x < 0:
+            self.x = c.screen_width
+        else:
+            self.x += self.__v_x
+            self.y += self.__v_y
 
     def __is_colliding(self, entity):
         if (abs(entity.x - self.x) < entity.width and entity.x - self.width < self.x and

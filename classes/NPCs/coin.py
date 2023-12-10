@@ -1,6 +1,4 @@
 import pyxel
-
-import constants
 import constants as c
 
 
@@ -24,30 +22,33 @@ class Coin:
     def dead(self):
         return self.__dead
 
-    @dead.setter
-    def dead(self, new):
-        self.__dead = new
     @property
     def v_y(self):
         return self.__v_y
-
 
     # Here we initialize the values that ar true or False
     def __initialize_booleans(self):
         self.__dead = False
         self.__coin_in_air = False
         self.__stopping = False
+        self.first = True
+        self.second = True
+        self.third = True
+        self.fourth = True
 
     # Here we initialize the values for the forces x and y acting on mario
 
-
-        # This is the method that detects every button pressed and stores information to give it to other methods
-
+    # This is the method that detects every button pressed and stores information to give it to other methods
 
     # This is the method that changes mario's position every frame
     def __update_position(self):  # changes the player position
-        self.x += self.__v_x
-        self.y += self.__v_y
+        if self.x > c.screen_width:
+            self.x = 0
+        elif self.x < 0:
+            self.x = c.screen_width
+        else:
+            self.x += self.__v_x
+            self.y += self.__v_y
 
     def __is_colliding(self, entity):
         if (abs(entity.x - self.x) < entity.width and entity.x - self.width < self.x and
@@ -68,27 +69,35 @@ class Coin:
                 self.y = block.y - self.height
                 self.__v_y = 0
 
-
     def __gravity_push(self):
 
         if self.y < pyxel.height:
             self.__v_y += c.gravity
-        else:
-            self.die()
+
 
     # This is the method that, following the input we give him when we press a button,
     # changes the model of mario every x frames
     def __update_animations(self):
-                if self.sprite != c.s_coin_1 and pyxel.frame_count % (c.fps / 15) == 0:
-                    self.sprite = c.s_coin_1
-                elif self.sprite != c.s_coin_2 and pyxel.frame_count % (c.fps / 15) == 0:
-                    self.sprite = c.s_coin_2
-                elif self.sprite != c.s_coin_3 and pyxel.frame_count % (c.fps / 15) == 0:
-                    self.sprite = c.s_coin_3
-                elif self.sprite != c.s_coin_4 and pyxel.frame_count % (c.fps / 15) == 0:
-                    self.sprite = c.s_coin_4
-                elif self.sprite != c.s_coin_5 and pyxel.frame_count % (c.fps / 15) == 0:
-                    self.sprite = c.s_coin_5
+
+        if self.sprite != c.s_coin_1 and self.first and pyxel.frame_count % (c.fps / 30) == 0:
+            self.sprite = c.s_coin_1
+            self.first = False
+        elif self.sprite != c.s_coin_2 and  self.second and pyxel.frame_count % (c.fps / 30) == 0:
+            self.sprite = c.s_coin_2
+            self.second = False
+        elif self.sprite != c.s_coin_3 and  self.third and pyxel.frame_count % (c.fps / 30) == 0:
+            self.sprite = c.s_coin_3
+            self.third = False
+        elif self.sprite != c.s_coin_4 and pyxel.frame_count % (c.fps / 30) == 0:
+            self.sprite = c.s_coin_4
+            self.fourth = False
+        elif self.sprite != c.s_coin_5 and pyxel.frame_count % (c.fps / 30) == 0:
+            self.sprite = c.s_coin_5
+            self. first = True
+            self. third = True
+            self.fourth = True
+            self. second = True
+
     # This is the method that groups every method that mario needs to update,
     # this makes it easier to plug it on the board
     def update_status(self, blocks: list, coin):
@@ -96,7 +105,3 @@ class Coin:
         self.__update_position()
         self.__gravity_push()
         self.__collide_blocks(blocks, coin)
-
-
-
-

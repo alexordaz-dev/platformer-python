@@ -1,6 +1,5 @@
 import pyxel
 
-import constants
 import constants as c
 
 
@@ -9,14 +8,15 @@ class Mario:
         # Here we initialize all the methods and properties we will be having for mario
         self.x = x
         self.y = y
-        self.width = constants.mario_width
-        self.height = constants.mario_height
+        self.width = c.mario_width
+        self.height = c.mario_height
         self.__sprite = c.s_mario_standing
         self.__initialize_booleans()
         self.__initialize_forces()
         self.__score = 0
         self.__money = 0
         self.__lives = 3
+        self.first = True
 
     @property
     def v_x(self):
@@ -100,8 +100,13 @@ class Mario:
 
     # This is the method that changes mario's position every frame
     def __update_position(self):  # changes the player position
-        self.x += self.__v_x
-        self.y += self.__v_y
+        if self.x > c.screen_width:
+            self.x = 0
+        elif self.x < 0 :
+            self.x = c.screen_width
+        else:
+            self.x += self.__v_x
+            self.y += self.__v_y
 
     def __is_colliding(self, entity):
         if (abs(entity.x - self.x) < entity.width and entity.x - self.width < self.x and
@@ -121,8 +126,8 @@ class Mario:
             collision_bottom = False
 
             if self.__is_colliding(block):  # check for collision
-                if abs(block.y + block.height - self.y) <= constants.collide and not collision_top:
-                    self.__v_y = constants.collide+0.1
+                if abs(block.y + block.height - self.y) <= c.collide and not collision_top:
+                    self.__v_y = c.collide+0.1
                     self.y = block.y + block.height+3
                     collision_bottom = True
 
@@ -131,7 +136,7 @@ class Mario:
                     if pyxel.btn(pyxel.KEY_SPACE):
                         self.__mario_in_air = True
                         
-                        self.__v_y = -constants.jump_force
+                        self.__v_y = -c.jump_force
                     else:
                         collision_top = True
                         self.__mario_in_air = False
@@ -168,13 +173,19 @@ class Mario:
         if self.looking_right:
             if self.__mario_in_air:
                 self.sprite = c.s_mario_jumping_r
+
             elif self.__walking:
-                if self.sprite != c.s_mario_walking_r1 and pyxel.frame_count % (c.fps / 30) == 0:
+                if self.sprite == c.s_mario_walking_r3 and pyxel.frame_count % (c.fps / 30) == 0:
+                    self.sprite = c.s_mario_walking_r2
+                elif self.sprite != c.s_mario_walking_r1 and self.first and pyxel.frame_count % (c.fps / 30) == 0:
+                    self.first = False
                     self.sprite = c.s_mario_walking_r1
                 elif self.sprite != c.s_mario_walking_r2 and pyxel.frame_count % (c.fps / 30) == 0:
                     self.sprite = c.s_mario_walking_r2
                 elif self.sprite != c.s_mario_walking_r3 and pyxel.frame_count % (c.fps / 30) == 0:
                     self.sprite = c.s_mario_walking_r3
+                    self.first = True
+
             elif not self.__walking and not self.__stopping:
                 self.sprite = c.s_mario_standing
             else:
@@ -183,12 +194,16 @@ class Mario:
             if self.__mario_in_air:
                 self.sprite = c.s_mario_jumping_l
             elif self.__walking:
-                if self.sprite != c.s_mario_walking_l1 and pyxel.frame_count % (c.fps / 30) == 0:
+                if self.sprite == c.s_mario_walking_l3 and pyxel.frame_count % (c.fps / 30) == 0:
+                    self.sprite = c.s_mario_walking_l2
+                elif self.sprite != c.s_mario_walking_l1 and self.first and pyxel.frame_count % (c.fps / 30) == 0:
+                    self.first = False
                     self.sprite = c.s_mario_walking_l1
                 elif self.sprite != c.s_mario_walking_l2 and pyxel.frame_count % (c.fps / 30) == 0:
                     self.sprite = c.s_mario_walking_l2
                 elif self.sprite != c.s_mario_walking_l3 and pyxel.frame_count % (c.fps / 30) == 0:
                     self.sprite = c.s_mario_walking_l3
+                    self.first = True
             elif not self.__walking and not self.__stopping:
                 self.sprite = c.s_mario_standing_l
             else:
