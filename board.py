@@ -1,9 +1,12 @@
+import turtle
+
 import pyxel
 from classes import mario
 from classes.blocks.pipes import Pipes
 from classes.blocks.floor import Floor
 from classes.blocks.ground import Ground
 from classes.blocks.pow import Pow1
+from classes.NPCs.turtles import Turtle
 import constants
 
 
@@ -15,6 +18,7 @@ class Board:
         self.height = int(constants.screen_height)
         # For mario here we name an object called player
         self.player = mario.Mario(int(self.width/2), 170)
+        self.turtle = [Turtle(40, 10), Turtle(140, 10)]
         pyxel.init(self.width, self.height)
         pyxel.load("assets/sprites.pyxres")
         self.initialize_pipes()
@@ -66,6 +70,8 @@ class Board:
             x += 16
     def update(self):
         # For mario we only need to call the update method, this will do all the things for mario
+        self.turtle[0].update_status(self.__blocks, self.turtle)
+        self.turtle[1].update_status(self.__blocks, self.turtle)
         self.player.update_status(self.__blocks, self.player)
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
@@ -74,6 +80,10 @@ class Board:
         pyxel.cls(0)
         # For mario we then draw his position and his firs sprite
         pyxel.blt(self.player.x, self.player.y, *self.player.sprite)
+
+        pyxel.blt(self.turtle[0].x, self.turtle[0].y, *self.turtle[0].sprite)
+        pyxel.blt(self.turtle[1].x, self.turtle[1].y, *self.turtle[1].sprite)
+
 
         pyxel.blt(self.pow1.x, self.pow1.y, *self.pow1.sprite)
 
