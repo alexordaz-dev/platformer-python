@@ -8,6 +8,7 @@ mario_height = 24
 mario_width = 16
 NPCs_height = 16
 NPCS_width = 16
+coin_width = 8
 ground_height = screen_height-220 + 204
 
 # ---------------------------------------------------------Mario

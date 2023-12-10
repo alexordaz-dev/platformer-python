@@ -7,6 +7,8 @@ from classes.blocks.floor import Floor
 from classes.blocks.ground import Ground
 from classes.blocks.pow import Pow1
 from classes.NPCs.turtles import Turtle
+from classes.NPCs.crabs import Crab
+from classes.NPCs.coin import Coin
 import constants
 
 
@@ -18,7 +20,9 @@ class Board:
         self.height = int(constants.screen_height)
         # For mario here we name an object called player
         self.player = mario.Mario(int(self.width/2), 170)
-        self.turtle = [Turtle(40, 10, 2, 2), Turtle(140, 10, -2, 2)]
+        self.turtle = [Turtle(40, 10, 2, 2), Turtle(360, 10, -2, 2)]
+        self.crab = [Crab(40, 70,2,2), Crab(360,70,-2, 2)]
+        self.coin = [Coin(90, 10,3,3), Coin(300,10, -2, 2)]
         pyxel.init(self.width, self.height)
         pyxel.load("assets/sprites.pyxres")
         self.initialize_pipes()
@@ -70,8 +74,13 @@ class Board:
             x += 16
     def update(self):
         # For mario we only need to call the update method, this will do all the things for mario
-        self.turtle[0].update_status(self.__blocks, self.turtle)
-        self.turtle[1].update_status(self.__blocks, self.turtle)
+        for turtle in self.turtle:
+            turtle.update_status(self.__blocks, self.turtle)
+
+        for crab in self.crab:
+            crab.update_status(self.__blocks, self.crab)
+        for coin in self.coin:
+            coin.update_status(self.__blocks, self.coin)
         self.player.update_status(self.__blocks, self.player)
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
@@ -81,9 +90,14 @@ class Board:
         # For mario we then draw his position and his firs sprite
         pyxel.blt(self.player.x, self.player.y, *self.player.sprite)
 
-        pyxel.blt(self.turtle[0].x, self.turtle[0].y, *self.turtle[0].sprite)
-        pyxel.blt(self.turtle[1].x, self.turtle[1].y, *self.turtle[1].sprite)
+        for turtle in self.turtle:
+            pyxel.blt(turtle.x, turtle.y, *turtle.sprite)
 
+        for crab in self.crab:
+            pyxel.blt(crab.x, crab.y, *crab.sprite)
+
+        for coin in self.coin:
+            pyxel.blt(coin.x, coin.y, *coin.sprite)
 
         pyxel.blt(self.pow1.x, self.pow1.y, *self.pow1.sprite)
 
