@@ -79,16 +79,16 @@ class Coin:
     # This is the method that, following the input we give him when we press a button,
     # changes the model of mario every x frames
     def __update_animations(self):
-                if self.sprite != c.s_coin_1 and pyxel.frame_count % (c.fps / 30) == 0:
+                if self.sprite != c.s_coin_1 and pyxel.frame_count % (c.fps / 15) == 0:
                     self.sprite = c.s_coin_1
-                elif self.sprite != c.s_coin_2 and pyxel.frame_count % (c.fps / 30) == 0:
+                elif self.sprite != c.s_coin_2 and pyxel.frame_count % (c.fps / 15) == 0:
                     self.sprite = c.s_coin_2
-                elif self.sprite != c.s_coin_3 and pyxel.frame_count % (c.fps / 30) == 0:
+                elif self.sprite != c.s_coin_3 and pyxel.frame_count % (c.fps / 15) == 0:
                     self.sprite = c.s_coin_3
-                elif self.sprite != c.s_coin_4 and pyxel.frame_count % (c.fps / 30) == 0:
+                elif self.sprite != c.s_coin_4 and pyxel.frame_count % (c.fps / 15) == 0:
                     self.sprite = c.s_coin_4
-                elif self.sprite != c.s_coin_4 and pyxel.frame_count % (c.fps / 30) == 0:
-                    self.sprite = c.s_coin_4
+                elif self.sprite != c.s_coin_5 and pyxel.frame_count % (c.fps / 15) == 0:
+                    self.sprite = c.s_coin_5
     # This is the method that groups every method that mario needs to update,
     # this makes it easier to plug it on the board
     def update_status(self, blocks: list, coin):
