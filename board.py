@@ -85,7 +85,7 @@ class Board:
         for enemy in self.__enemies:
             enemy.update_status(self.__blocks, self.__enemies, )
         for coin in self.coin:
-            coin.update_status(self.__blocks, self.coin)
+            coin.update_status(self.__blocks,self.__enemies)
         self.player.update_status(self.__blocks, self.player)
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
