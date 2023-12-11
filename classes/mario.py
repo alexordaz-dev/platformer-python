@@ -4,7 +4,7 @@ import constants as c
 
 
 class Mario:
-    def __init__(self, x: int, y: int, ) -> None:
+    def __init__(self, x: int, y: int,) -> None:
         # Here we initialize all the methods and properties we will be having for mario
         self.x = x
         self.y = y
@@ -121,7 +121,7 @@ class Mario:
 
     def __collide_enemies(self, enemies: list):
         for enemy in enemies:
-            if  self.__is_colliding(enemy):
+            if self.__is_colliding(enemy):
                 self.die()
 
     def __collide_blocks(self, blocks: list, ):

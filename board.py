@@ -1,5 +1,5 @@
 import pyxel
-from classes import mario
+from classes.mario import Mario
 from classes.blocks.pipes import Pipes
 from classes.blocks.floor import Floor
 from classes.blocks.ground import Ground
@@ -17,7 +17,7 @@ class Board:
         self.width = int(constants.screen_width)
         self.height = int(constants.screen_height)
         # For mario here we name an object called player
-        self.player = mario.Mario(int(self.width / 2), 170)
+        self.player = Mario(int(self.width / 2), 170,)
         self.coin = [Coin(90, 10, 3, 3), Coin(300, 10, -2, 2)]
         pyxel.init(self.width, self.height)
         pyxel.load("assets/sprites.pyxres")
@@ -83,7 +83,7 @@ class Board:
     def update(self):
         # For mario we only need to call the update method, this will do all the things for mario
         for enemy in self.__enemies:
-            enemy.update_status(self.__blocks, self.__enemies, )
+            enemy.update_status(self.__blocks, self.__enemies, self.player)
         for coin in self.coin:
             coin.update_status(self.__blocks,self.__enemies)
         self.player.update_status(self.__blocks, self.__enemies)

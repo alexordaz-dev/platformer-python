@@ -70,6 +70,17 @@ class Turtle:
                 if self.__v_x == enemy.__v_x:
                     self.__v_x = -self.__v_x
 
+    def __collide_player(self, player: list):
+        if self.__is_colliding(player):
+            if self.x < player.x:
+                self.x = player.x - self.width
+                self.__v_x = - self.__v_x
+            else:
+                self.x = player.x + player.width
+            self.__v_x = -self.__v_x
+            if self.__v_x == player.__v_x:
+                self.__v_x = -self.__v_x
+
     def __collide_blocks(self, blocks: list, ):
         for block in blocks:
 
@@ -99,9 +110,10 @@ class Turtle:
 
     # This is the method that groups every method that mario needs to update,
     # this makes it easier to plug it on the board
-    def update_status(self, blocks: list, enemies):
+    def update_status(self, blocks: list, enemies, player):
         self.__update_animations()
         self.__update_position()
         self.__gravity_push()
-        self.__collide_blocks(blocks,)
+        self.__collide_blocks(blocks, )
         self.__collide_enemies(enemies)
+        self.__collide_player(player)
