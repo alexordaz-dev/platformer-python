@@ -56,7 +56,7 @@ class Board:
 
     def generate_enemies(self):
         self.__enemies = [
-            Turtle(5, 10, 2, 2),
+            Turtle(120, 10, 2, 2),
             Turtle(360, 10, -2, 2),
             Crab(40, 70, 2, 2),
             Crab(360, 70, -2, 2)

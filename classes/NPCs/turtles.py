@@ -26,9 +26,13 @@ class Turtle:
         return self.__v_y
 
     def __initialize_booleans(self):
+        self.__turning_right = False
+        self.__turning_left = False
+        self.__turning_frames = 0
+
         if self.__v_x > 0:
             self.__looking_right = True
-        else:
+        elif self.__v_x < 0:
             self.__looking_right = False
 
     def __initialize_sprite(self):
@@ -59,32 +63,31 @@ class Turtle:
     def __collide_enemies(self, enemies: list):
         for enemy in enemies:
             if isinstance(enemy, Turtle) and enemy is not self and self.__is_colliding(enemy):
-                # Adjust position in the X direction
+                # Ajustar posición en el eje X
                 if self.x < enemy.x:
                     self.x = enemy.x - self.width
-                    self.__v_x = -self.__v_x
-                    self.__looking_right = False
+                    self.__turning_frames = c.turning_animation_frames
+                    self.__looking_right = True
                 else:
                     self.x = enemy.x + enemy.width
-                    self.__v_x = -self.__v_x
-                    self.__looking_right = True
-                if self.__v_x == enemy.__v_x:
-                    self.__v_x = -self.__v_x
+                    self.__turning_frames = c.turning_animation_frames
+                    self.__looking_right = False
 
-                # Adjust position in the Y direction
-                if self.y < enemy.y:
-                    self.y = enemy.y - self.height
-                else:
-                    self.y = enemy.y + enemy.height
+                # Establecer la dirección de la tortuga según la dirección del enemigo
+                self.__v_x = -self.__v_x
+                self.__looking_right = not self.__looking_right
 
     def __collide_player(self, player):
         if self.__is_colliding(player):
-            # Adjust position in the X direction
             if self.x < player.x:
                 self.x = player.x - self.width
+                self.__turning_frames = c.turning_animation_frames
+                self.__looking_right = False
             else:
                 self.x = player.x + player.width
-            self.__v_x = -self.__v_x
+                self.__turning_frames = c.turning_animation_frames
+                self.__looking_right = True
+            # Adjust position in the Y direction
 
     def __collide_blocks(self, blocks: list):
         for block in blocks:
@@ -97,15 +100,23 @@ class Turtle:
             self.__v_y += c.gravity
 
     def __update_animations(self):
-        if self.looking_right:
-            walking_frames = [c.s_turtle_walking_r1, c.s_turtle_walking_r2,c.s_turtle_walking_r3]
-            frame_index = int((pyxel.frame_count / (c.fps / 30)) % len(walking_frames))
-            self.sprite = walking_frames[frame_index]
-        else:
-            walking_frames = [c.s_turtle_walking_l1, c.s_turtle_walking_l2,c.s_turtle_walking_l3]
-            frame_index = int((pyxel.frame_count / (c.fps / 30)) % len(walking_frames))
-            self.sprite = walking_frames[frame_index]
 
+        if self.__turning_frames > 0:
+            turning_frames = [c.s_turtle_turning_r, c.s_turtle_turning_r2] if self.__looking_right else [
+                c.s_turtle_turning_l, c.s_turtle_turning_l2]
+            frame_index = int(((c.turning_animation_frames - self.__turning_frames) / c.turning_animation_frames) * len(
+                turning_frames))
+            self.sprite = turning_frames[frame_index]
+            self.__v_x = 0
+            self.__turning_frames -= 1
+        else:
+            self.__v_x = 2
+            walking_frames = [c.s_turtle_walking_r1, c.s_turtle_walking_r2, c.s_turtle_walking_r3]
+            if not self.__looking_right:
+                self.__v_x = -2
+                walking_frames = [c.s_turtle_walking_l1, c.s_turtle_walking_l2, c.s_turtle_walking_l3]
+            frame_index = int((pyxel.frame_count / (c.fps / 30)) % len(walking_frames))
+            self.sprite = walking_frames[frame_index]
     def update_status(self, blocks: list, enemies, player):
         self.__update_animations()
         self.__update_position()
