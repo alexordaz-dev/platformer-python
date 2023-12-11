@@ -8,7 +8,7 @@ from classes.NPCs.turtles import Turtle
 from classes.NPCs.crabs import Crab
 from classes.NPCs.coin import Coin
 import constants
-aaaaaaaaaaaaaaaaaaa
+
 
 class Board:
 
@@ -56,7 +56,7 @@ class Board:
 
     def generate_enemies(self):
         self.__enemies = [
-            Turtle(10, 10, 2, 2),
+            Turtle(5, 10, 2, 2),
             Turtle(360, 10, -2, 2),
             Crab(40, 70, 2, 2),
             Crab(360, 70, -2, 2)

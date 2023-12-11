@@ -60,10 +60,16 @@ class Crab:
     def __collide_enemies(self, enemies: list):
         for enemy in enemies:
             if isinstance(enemy, Crab) and enemy is not self and self.__is_colliding(enemy):
+                # Ajustar posición en el eje X
                 if self.x < enemy.x:
                     self.x = enemy.x - self.width
                 else:
                     self.x = enemy.x + enemy.width
+                # Ajustar posición en el eje Y
+                if self.y < enemy.y:
+                    self.y = enemy.y - self.height
+                else:
+                    self.y = enemy.y + enemy.height
                 self.__v_x = -self.__v_x
 
     def __collide_player(self, player):
@@ -74,12 +80,9 @@ class Crab:
                 self.x = player.x + player.width
             self.__v_x = -self.__v_x
 
-
     def __collide_blocks(self, blocks: list):
         for block in blocks:
-
             if self.__is_colliding(block):  # check for collision
-
                 self.y = block.y - self.height
                 self.__v_y = 0
 
@@ -91,23 +94,15 @@ class Crab:
     # This is the method that, following the input we give him when we press a button,
     # changes the model of mario every x frames
     def __update_animations(self):
+        walking_frames_right = [c.s_crab_walking_r1, c.s_crab_walking_r2, c.s_crab_walking_r3]
+        walking_frames_left = [c.s_crab_walking_l1, c.s_crab_walking_l2, c.s_crab_walking_l3]
+
+        frame_index = int((pyxel.frame_count / (c.fps / 30)) % len(walking_frames_right))
+
         if self.looking_right:
-
-            if self.sprite != c.s_crab_walking_r1 and pyxel.frame_count % (c.fps / 30) == 0:
-                self.sprite = c.s_crab_walking_r1
-            elif self.sprite != c.s_crab_walking_r2 and pyxel.frame_count % (c.fps / 30) == 0:
-                self.sprite = c.s_crab_walking_r2
-            elif self.sprite != c.s_crab_walking_r3 and pyxel.frame_count % (c.fps / 30) == 0:
-                self.sprite = c.s_crab_walking_r3
-
+            self.sprite = walking_frames_right[frame_index]
         else:
-
-            if self.sprite != c.s_crab_walking_l1 and pyxel.frame_count % (c.fps / 30) == 0:
-                self.sprite = c.s_crab_walking_l1
-            elif self.sprite != c.s_crab_walking_l2 and pyxel.frame_count % (c.fps / 30) == 0:
-                self.sprite = c.s_crab_walking_l2
-            elif self.sprite != c.s_crab_walking_l3 and pyxel.frame_count % (c.fps / 30) == 0:
-                self.sprite = c.s_crab_walking_l3
+            self.sprite = walking_frames_left[frame_index]
 
     # This is the method that groups every method that mario needs to update,
     # this makes it easier to plug it on the board

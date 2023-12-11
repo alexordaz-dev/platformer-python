@@ -162,41 +162,25 @@ class Mario:
         if self.looking_right:
             if self.__mario_in_air:
                 self.sprite = c.s_mario_jumping_r
-
             elif self.__walking:
-                if self.sprite == c.s_mario_walking_r3 and pyxel.frame_count % (c.fps / 30) == 0:
-                    self.sprite = c.s_mario_walking_r2
-                elif self.sprite != c.s_mario_walking_r1 and self.first and pyxel.frame_count % (c.fps / 30) == 0:
-                    self.first = False
-                    self.sprite = c.s_mario_walking_r1
-                elif self.sprite != c.s_mario_walking_r2 and pyxel.frame_count % (c.fps / 30) == 0:
-                    self.sprite = c.s_mario_walking_r2
-                elif self.sprite != c.s_mario_walking_r3 and pyxel.frame_count % (c.fps / 30) == 0:
-                    self.sprite = c.s_mario_walking_r3
-                    self.first = True
-
-            elif not self.__walking and not self.__stopping:
-                self.sprite = c.s_mario_standing
-            else:
+                walking_frames = [c.s_mario_walking_r1, c.s_mario_walking_r2, c.s_mario_walking_r3]
+                frame_index = int((pyxel.frame_count / (c.fps / 30)) % len(walking_frames))
+                self.sprite = walking_frames[frame_index]
+            elif self.__stopping:
                 self.sprite = c.s_mario_stop
+            else:
+                self.sprite = c.s_mario_standing
         else:
             if self.__mario_in_air:
                 self.sprite = c.s_mario_jumping_l
             elif self.__walking:
-                if self.sprite == c.s_mario_walking_l3 and pyxel.frame_count % (c.fps / 30) == 0:
-                    self.sprite = c.s_mario_walking_l2
-                elif self.sprite != c.s_mario_walking_l1 and self.first and pyxel.frame_count % (c.fps / 30) == 0:
-                    self.first = False
-                    self.sprite = c.s_mario_walking_l1
-                elif self.sprite != c.s_mario_walking_l2 and pyxel.frame_count % (c.fps / 30) == 0:
-                    self.sprite = c.s_mario_walking_l2
-                elif self.sprite != c.s_mario_walking_l3 and pyxel.frame_count % (c.fps / 30) == 0:
-                    self.sprite = c.s_mario_walking_l3
-                    self.first = True
-            elif not self.__walking and not self.__stopping:
-                self.sprite = c.s_mario_standing_l
-            else:
+                walking_frames = [c.s_mario_walking_l1, c.s_mario_walking_l2, c.s_mario_walking_l3]
+                frame_index = int((pyxel.frame_count / (c.fps / 30)) % len(walking_frames))
+                self.sprite = walking_frames[frame_index]
+            elif self.__stopping:
                 self.sprite = c.s_mario_stop_l
+            else:
+                self.sprite = c.s_mario_standing_l
 
     # This is the method that groups every method that mario needs to update,
     # this makes it easier to plug it on the board
