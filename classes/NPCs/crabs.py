@@ -4,6 +4,7 @@ import constants as c
 
 class Crab:
     def __init__(self, x: int, y: int, __v_x: int, __v_y: int) -> None:
+        # Initialize crab attributes and state
         self.x = x
         self.y = y
         self.__v_x = __v_x
@@ -26,22 +27,26 @@ class Crab:
         return self.__v_y
 
     def __initialize_booleans(self):
+        # Initialize boolean flags for turning and looking direction
         self.__turning_right = False
         self.__turning_left = False
         self.__turning_frames = 0
 
+        # Determine initial looking direction based on velocity
         if self.__v_x > 0:
             self.__looking_right = True
         elif self.__v_x < 0:
             self.__looking_right = False
 
     def __initialize_sprint(self):
+        # Set sprite based on initial looking direction
         if self.__looking_right:
             self.sprite = c.s_crab_walking_r1
         else:
             self.sprite = c.s_crab_walking_l1
 
     def __update_position(self):
+        # Update the position of the crab, wrapping around the screen if necessary
         if self.x > c.screen_width:
             self.x = 0
         elif self.x < 0:
@@ -51,10 +56,11 @@ class Crab:
             self.y += self.__v_y
 
     def __is_colliding(self, entity):
+        # Check for collision with another entity based on bounding boxes
         if (
-                abs(entity.x - self.x) < entity.width
-                and entity.x - self.width < self.x
-                and abs(entity.y - self.y) < self.height
+            abs(entity.x - self.x) < entity.width
+            and entity.x - self.width < self.x
+            and abs(entity.y - self.y) < self.height
         ):  # check for collision
             return True
         else:
@@ -63,7 +69,7 @@ class Crab:
     def __collide_enemies(self, enemies: list):
         for enemy in enemies:
             if enemy is not self and self.__is_colliding(enemy):
-                # Ajustar posición en el eje X
+                # Adjust position and direction when colliding with enemies
                 if self.x < enemy.x:
                     self.x = enemy.x - self.width
                     self.__turning_frames = c.turning_animation_frames
@@ -73,12 +79,13 @@ class Crab:
                     self.__turning_frames = c.turning_animation_frames
                     self.__looking_right = False
 
-                # Establecer la dirección del cangrejo según la dirección del enemigo
+                # Reverse the crab's direction and update looking direction
                 self.__v_x = -self.__v_x
                 self.__looking_right = not self.__looking_right
 
     def __collide_player(self, player):
         if self.__is_colliding(player):
+            # Adjust position and direction when colliding with the player
             if self.x < player.x:
                 self.x = player.x - self.width
                 self.__turning_frames = c.turning_animation_frames
@@ -91,16 +98,18 @@ class Crab:
     def __collide_blocks(self, blocks: list):
         for block in blocks:
             if self.__is_colliding(block):  # check for collision
+                # Adjust position and stop vertical movement when colliding with blocks
                 self.y = block.y - self.height
                 self.__v_y = 0
 
     def __gravity_push(self):
+        # Apply gravity force to the crab if it is not at the bottom of the screen
         if self.y < pyxel.height:
             self.__v_y += c.gravity
 
     def __update_animations(self):
-
         if self.__turning_frames > 0:
+            # Animate turning with appropriate sprite frames
             turning_frames = [c.s_crab_turning_r1, c.s_crab_turning_r2] if self.__looking_right else [
                 c.s_crab_turning_l1, c.s_crab_turning_l2]
             frame_index = int(((c.turning_animation_frames - self.__turning_frames) / c.turning_animation_frames) * len(
@@ -109,6 +118,7 @@ class Crab:
             self.__v_x = 0
             self.__turning_frames -= 1
         else:
+            # Animate walking with appropriate sprite frames
             self.__v_x = 2
             walking_frames = [c.s_crab_walking_r1, c.s_crab_walking_r2, c.s_crab_walking_r3]
             if not self.__looking_right:
@@ -118,6 +128,7 @@ class Crab:
             self.sprite = walking_frames[frame_index]
 
     def update_status(self, blocks: list, enemies, player):
+        # Update crab status by calling individual methods
         self.__update_animations()
         self.__update_position()
         self.__gravity_push()
