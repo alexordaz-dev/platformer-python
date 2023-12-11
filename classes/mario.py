@@ -121,10 +121,10 @@ class Mario:
 
     def __collide_enemies(self, enemies: list):
         for enemy in enemies:
-            if isinstance(enemy, enemies) and enemy is not self and self.__is_colliding(enemy):
+            if  self.__is_colliding(enemy):
                 self.die()
 
-    def __collide_blocks(self, blocks: list, player):
+    def __collide_blocks(self, blocks: list, ):
         self.lateral_collision = False
 
         for block in blocks:
@@ -200,10 +200,10 @@ class Mario:
 
     # This is the method that groups every method that mario needs to update,
     # this makes it easier to plug it on the board
-    def update_status(self, blocks: list, player):
+    def update_status(self, blocks: list, enemies):
         self.__update_animations()
         self.__update_position()
         self.__detect_buttons()
         self.__gravity_push()
-        self.__collide_blocks(blocks, player)
+        self.__collide_blocks(blocks)
         self.__collide_enemies(enemies)
