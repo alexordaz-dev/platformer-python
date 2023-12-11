@@ -62,7 +62,7 @@ class Turtle:
 
     def __collide_enemies(self, enemies: list):
         for enemy in enemies:
-            if isinstance(enemy, Turtle) and enemy is not self and self.__is_colliding(enemy):
+            if enemy is not self and self.__is_colliding(enemy):
                 # Ajustar posición en el eje X
                 if self.x < enemy.x:
                     self.x = enemy.x - self.width
@@ -73,9 +73,11 @@ class Turtle:
                     self.__turning_frames = c.turning_animation_frames
                     self.__looking_right = False
 
-                # Establecer la dirección de la tortuga según la dirección del enemigo
+                # Establecer la dirección del cangrejo según la dirección del enemigo
                 self.__v_x = -self.__v_x
                 self.__looking_right = not self.__looking_right
+
+
 
     def __collide_player(self, player):
         if self.__is_colliding(player):
@@ -102,8 +104,8 @@ class Turtle:
     def __update_animations(self):
 
         if self.__turning_frames > 0:
-            turning_frames = [c.s_turtle_turning_r, c.s_turtle_turning_r2] if self.__looking_right else [
-                c.s_turtle_turning_l, c.s_turtle_turning_l2]
+            turning_frames = [c.s_turtle_turning_r1, c.s_turtle_turning_r2] if self.__looking_right else [
+                c.s_turtle_turning_l1, c.s_turtle_turning_l2]
             frame_index = int(((c.turning_animation_frames - self.__turning_frames) / c.turning_animation_frames) * len(
                 turning_frames))
             self.sprite = turning_frames[frame_index]

@@ -1,11 +1,9 @@
 import pyxel
-
 import constants as c
 
 
 class Crab:
-    def __init__(self, x: int, y: int, __v_x: int, __v_y: int, ) -> None:
-        # Here we initialize all the methods and properties we will be having for mario
+    def __init__(self, x: int, y: int, __v_x: int, __v_y: int) -> None:
         self.x = x
         self.y = y
         self.__v_x = __v_x
@@ -27,11 +25,14 @@ class Crab:
     def v_y(self):
         return self.__v_y
 
-    # Here we initialize the values that ar true or False
     def __initialize_booleans(self):
+        self.__turning_right = False
+        self.__turning_left = False
+        self.__turning_frames = 0
+
         if self.__v_x > 0:
             self.__looking_right = True
-        else:
+        elif self.__v_x < 0:
             self.__looking_right = False
 
     def __initialize_sprint(self):
@@ -40,7 +41,6 @@ class Crab:
         else:
             self.sprite = c.s_crab_walking_l1
 
-    # This is the method that changes enemy position every frame
     def __update_position(self):
         if self.x > c.screen_width:
             self.x = 0
@@ -51,34 +51,42 @@ class Crab:
             self.y += self.__v_y
 
     def __is_colliding(self, entity):
-        if (abs(entity.x - self.x) < entity.width and entity.x - self.width < self.x and
-                abs(entity.y - self.y) < self.height):  # check for collision
+        if (
+                abs(entity.x - self.x) < entity.width
+                and entity.x - self.width < self.x
+                and abs(entity.y - self.y) < self.height
+        ):  # check for collision
             return True
         else:
             return False
 
     def __collide_enemies(self, enemies: list):
         for enemy in enemies:
-            if isinstance(enemy, Crab) and enemy is not self and self.__is_colliding(enemy):
+            if enemy is not self and self.__is_colliding(enemy):
                 # Ajustar posición en el eje X
                 if self.x < enemy.x:
                     self.x = enemy.x - self.width
+                    self.__turning_frames = c.turning_animation_frames
+                    self.__looking_right = True
                 else:
                     self.x = enemy.x + enemy.width
-                # Ajustar posición en el eje Y
-                if self.y < enemy.y:
-                    self.y = enemy.y - self.height
-                else:
-                    self.y = enemy.y + enemy.height
+                    self.__turning_frames = c.turning_animation_frames
+                    self.__looking_right = False
+
+                # Establecer la dirección del cangrejo según la dirección del enemigo
                 self.__v_x = -self.__v_x
+                self.__looking_right = not self.__looking_right
 
     def __collide_player(self, player):
         if self.__is_colliding(player):
             if self.x < player.x:
                 self.x = player.x - self.width
+                self.__turning_frames = c.turning_animation_frames
+                self.__looking_right = False
             else:
                 self.x = player.x + player.width
-            self.__v_x = -self.__v_x
+                self.__turning_frames = c.turning_animation_frames
+                self.__looking_right = True
 
     def __collide_blocks(self, blocks: list):
         for block in blocks:
@@ -87,25 +95,28 @@ class Crab:
                 self.__v_y = 0
 
     def __gravity_push(self):
-
         if self.y < pyxel.height:
             self.__v_y += c.gravity
 
-    # This is the method that, following the input we give him when we press a button,
-    # changes the model of mario every x frames
     def __update_animations(self):
-        walking_frames_right = [c.s_crab_walking_r1, c.s_crab_walking_r2, c.s_crab_walking_r3]
-        walking_frames_left = [c.s_crab_walking_l1, c.s_crab_walking_l2, c.s_crab_walking_l3]
 
-        frame_index = int((pyxel.frame_count / (c.fps / 30)) % len(walking_frames_right))
-
-        if self.looking_right:
-            self.sprite = walking_frames_right[frame_index]
+        if self.__turning_frames > 0:
+            turning_frames = [c.s_crab_turning_r1, c.s_crab_turning_r2] if self.__looking_right else [
+                c.s_crab_turning_l1, c.s_crab_turning_l2]
+            frame_index = int(((c.turning_animation_frames - self.__turning_frames) / c.turning_animation_frames) * len(
+                turning_frames))
+            self.sprite = turning_frames[frame_index]
+            self.__v_x = 0
+            self.__turning_frames -= 1
         else:
-            self.sprite = walking_frames_left[frame_index]
+            self.__v_x = 2
+            walking_frames = [c.s_crab_walking_r1, c.s_crab_walking_r2, c.s_crab_walking_r3]
+            if not self.__looking_right:
+                self.__v_x = -2
+                walking_frames = [c.s_crab_walking_l1, c.s_crab_walking_l2, c.s_crab_walking_l3]
+            frame_index = int((pyxel.frame_count / (c.fps / 30)) % len(walking_frames))
+            self.sprite = walking_frames[frame_index]
 
-    # This is the method that groups every method that mario needs to update,
-    # this makes it easier to plug it on the board
     def update_status(self, blocks: list, enemies, player):
         self.__update_animations()
         self.__update_position()
