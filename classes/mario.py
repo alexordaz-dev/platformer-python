@@ -69,6 +69,8 @@ class Mario:
     def die(self):
         self.__lives -= 1
         self.dead = True
+        if self.__lives == 0:
+            quit()
 
         # This is the method that detects every button pressed and stores information to give it to other methods
 
@@ -119,7 +121,7 @@ class Mario:
 
     def __collide_enemies(self, enemies: list):
         for enemy in enemies:
-            if isinstance(enemy, Mario) and enemy is not self and self.__is_colliding(enemy):
+            if isinstance(enemy, enemies) and enemy is not self and self.__is_colliding(enemy):
                 self.die()
 
     def __collide_blocks(self, blocks: list, player):
@@ -204,3 +206,4 @@ class Mario:
         self.__detect_buttons()
         self.__gravity_push()
         self.__collide_blocks(blocks, player)
+        self.__collide_enemies(enemies)
