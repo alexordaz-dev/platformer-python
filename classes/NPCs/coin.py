@@ -74,7 +74,6 @@ class Coin:
         if self.y < pyxel.height:
             self.__v_y += c.gravity
 
-
     # This is the method that, following the input we give him when we press a button,
     # changes the model of mario every x frames
     def __update_animations(self):
@@ -82,10 +81,10 @@ class Coin:
         if self.sprite != c.s_coin_1 and self.first and pyxel.frame_count % (c.fps / 30) == 0:
             self.sprite = c.s_coin_1
             self.first = False
-        elif self.sprite != c.s_coin_2 and  self.second and pyxel.frame_count % (c.fps / 30) == 0:
+        elif self.sprite != c.s_coin_2 and self.second and pyxel.frame_count % (c.fps / 30) == 0:
             self.sprite = c.s_coin_2
             self.second = False
-        elif self.sprite != c.s_coin_3 and  self.third and pyxel.frame_count % (c.fps / 30) == 0:
+        elif self.sprite != c.s_coin_3 and self.third and pyxel.frame_count % (c.fps / 30) == 0:
             self.sprite = c.s_coin_3
             self.third = False
         elif self.sprite != c.s_coin_4 and pyxel.frame_count % (c.fps / 30) == 0:

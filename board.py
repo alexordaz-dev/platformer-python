@@ -29,7 +29,7 @@ class Board:
         self.initialize_floor()
         self. generate_blocks()
         self.create_ground()
-        self.pow1 = Pow1(192, 150, 16)
+
         pyxel.run(self.update, self.draw)
 
     def initialize_pipes(self):
@@ -64,7 +64,8 @@ class Board:
             Floor(120, 100, 155),
             Floor(0, 110, 54),
             Floor(358, 110, 60),
-            Floor(0,55,170)
+            Floor(0,55,170),
+            Pow1(192, 150, 16)
         ]
 
     def create_ground(self):
@@ -99,7 +100,7 @@ class Board:
         for coin in self.coin:
             pyxel.blt(coin.x, coin.y, *coin.sprite)
 
-        pyxel.blt(self.pow1.x, self.pow1.y, *self.pow1.sprite)
+       
 
         for tuberia in self.pipes:
             pyxel.blt(tuberia.x, tuberia.y, *tuberia.sprite)
