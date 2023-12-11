@@ -17,7 +17,6 @@ class Mario:
         self.__money = 0
         self.__lives = 3
         self.first = True
-
     @property
     def v_x(self):
         return self.__v_x
@@ -117,6 +116,11 @@ class Mario:
                 return True
         else:
             return False
+
+    def __collide_enemies(self, enemies: list):
+        for enemy in enemies:
+            if isinstance(enemy, Mario) and enemy is not self and self.__is_colliding(enemy):
+                self.die()
 
     def __collide_blocks(self, blocks: list, player):
         self.lateral_collision = False
