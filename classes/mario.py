@@ -68,7 +68,7 @@ class Mario:
         self.__v_y = 0
 
     def die(self):
-        self.lives -= 1
+        self.__lives -= 1
         self.dead = True
 
         # This is the method that detects every button pressed and stores information to give it to other methods
@@ -102,7 +102,7 @@ class Mario:
     def __update_position(self):  # changes the player position
         if self.x > c.screen_width:
             self.x = 0
-        elif self.x < 0 :
+        elif self.x < 0:
             self.x = c.screen_width
         else:
             self.x += self.__v_x
@@ -142,24 +142,7 @@ class Mario:
                         self.__mario_in_air = False
                         self.y = block.y - self.height
                         self.__v_y = 0
-                if (
-                        block.x + block.width < self.x < block.x + block.width + 3
-                        and self.y + self.height > block.y
-                        and self.y < block.y + block.height
-                ):
-                    self.x = block.x + block.width + 3
-                    lateral_collision = True
 
-                if (
-                        self.x + self.width > block.x > self.x + self.width - 3
-                        and self.y + self.height > block.y
-                        and self.y < block.y + block.height
-                ):
-                    self.x = block.x - self.width - 3
-                    lateral_collision = True
-
-                if self.lateral_collision:
-                    self.__v_x = 0
     def __gravity_push(self):
 
         if self.y < pyxel.height:
