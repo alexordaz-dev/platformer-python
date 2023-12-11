@@ -18,7 +18,6 @@ class Board:
         self.height = int(constants.screen_height)
         # For mario here we name an object called player
         self.player = Mario(int(self.width / 2), 170, )
-        self.__coins = []
         pyxel.init(self.width, self.height)
         pyxel.load("assets/sprites.pyxres")
         self.initialize_pipes()
@@ -26,6 +25,7 @@ class Board:
         self.generate_blocks()
         self.create_ground()
         self.generate_enemies()
+        self.generate_coins()
         pyxel.run(self.update, self.draw)
 
     def initialize_pipes(self):
@@ -53,7 +53,9 @@ class Board:
         return floors
 
     def generate_coins(self):
-        self.__coins = [Coin(90, 10, 3, 3), Coin(300, 10, -2, 2)]
+        self.__coins = [Coin(90, 10, 3, 3),
+                        Coin(300, 10, -2, 2)
+                        ]
 
     def generate_enemies(self):
         self.__enemies = [
@@ -84,9 +86,9 @@ class Board:
     def update(self):
         # For mario we only need to call the update method, this will do all the things for mario
         for enemy in self.__enemies:
-            enemy.update_status(self.__blocks, self.__enemies, self.player,)
+            enemy.update_status(self.__blocks, self.__enemies, self.player, self.__coins)
         for coin in self.__coins:
-            coin.update_status(self.__blocks, self.__enemies)
+            coin.update_status(self.__blocks, self.__enemies, self.__coins)
         self.player.update_status(self.__blocks, self.__enemies,)
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()

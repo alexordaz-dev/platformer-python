@@ -82,6 +82,19 @@ class Turtle:
                 self.__v_x = -self.__v_x
                 self.__looking_right = not self.__looking_right
 
+    def __collide_coins(self, coins: list):
+        for coin in coins:
+            if self.__is_colliding(coin):
+                # Adjust position and direction when colliding with enemies
+                if self.x < coin.x:
+                    self.x = coin.x - self.width
+                    self.__turning_frames = c.turning_animation_frames
+                    self.__looking_right = True
+                else:
+                    self.x = coin.x + coin.width
+                    self.__turning_frames = c.turning_animation_frames
+                    self.__looking_right = False
+
     def __collide_player(self, player):
         if self.__is_colliding(player):
             # Adjust position and direction when colliding with the player
@@ -126,7 +139,7 @@ class Turtle:
             frame_index = int((pyxel.frame_count / (c.fps / 30)) % len(walking_frames))
             self.sprite = walking_frames[frame_index]
 
-    def update_status(self, blocks: list, enemies, player):
+    def update_status(self, blocks: list, enemies, player, coins):
         # Update turtle status by calling individual methods
         self.__update_animations()
         self.__update_position()
@@ -134,3 +147,4 @@ class Turtle:
         self.__collide_blocks(blocks, )
         self.__collide_enemies(enemies)
         self.__collide_player(player)
+        self.__collide_coins(coins)

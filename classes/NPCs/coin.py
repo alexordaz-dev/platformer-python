@@ -62,14 +62,13 @@ class Coin:
 
     def __collide_enemies(self, enemies: list):
         for enemy in enemies:
-            if isinstance(enemy, Coin) and enemy is not self and self.__is_colliding(enemy):
+            if self.__is_colliding(enemy):
+                # Adjust position and direction when colliding with enemies
                 if self.x < enemy.x:
                     self.x = enemy.x - self.width
-                    self.__v_x = - self.__v_x
+                    self.__v_x = -self.__v_x
                 else:
                     self.x = enemy.x + enemy.width
-                self.__v_x = -self.__v_x
-                if self.__v_x == enemy.__v_x:
                     self.__v_x = -self.__v_x
 
     def __collide_blocks(self, blocks: list, ):
@@ -80,7 +79,21 @@ class Coin:
                 self.__coin_in_air = False
                 self.y = block.y - self.height
                 self.__v_y = 0
+    def __collide_coins(self, coins: list):
+        for coin in coins:
+            if coin is not self and self.__is_colliding(coin):
+                # Adjust position and direction when colliding with enemies
+                if self.x < coin.x:
+                    self.x = coin.x - self.width
 
+                    self.__looking_right = True
+                else:
+                    self.x = coin.x + coin.width
+
+                    self.__looking_right = False
+
+                self.__v_x = -self.__v_x
+                self.__looking_right = not self.__looking_right
     def __gravity_push(self):
 
         if self.y < pyxel.height:
@@ -95,9 +108,10 @@ class Coin:
 
     # This is the method that groups every method that mario needs to update,
     # this makes it easier to plug it on the board
-    def update_status(self, blocks: list, enemies):
+    def update_status(self, blocks: list, enemies, coins):
         self.__update_animations()
         self.__update_position()
         self.__gravity_push()
         self.__collide_blocks(blocks)
         self.__collide_enemies(enemies)
+        self.__collide_coins(coins)

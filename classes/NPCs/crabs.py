@@ -58,13 +58,30 @@ class Crab:
     def __is_colliding(self, entity):
         # Check for collision with another entity based on bounding boxes
         if (
-            abs(entity.x - self.x) < entity.width
-            and entity.x - self.width < self.x
-            and abs(entity.y - self.y) < self.height
+                abs(entity.x - self.x) < entity.width
+                and entity.x - self.width < self.x
+                and abs(entity.y - self.y) < self.height
         ):  # check for collision
             return True
         else:
             return False
+
+    def __collide_coins(self, coins: list):
+        for coin in coins:
+            if self.__is_colliding(coin):
+                # Adjust position and direction when colliding with enemies
+                if self.x < coin.x:
+                    self.x = coin.x - self.width
+                    self.__turning_frames = c.turning_animation_frames
+                    self.__looking_right = True
+                else:
+                    self.x = coin.x + coin.width
+                    self.__turning_frames = c.turning_animation_frames
+                    self.__looking_right = False
+
+                # Reverse the turtle's direction and update looking direction
+                self.__v_x = -self.__v_x
+                self.__looking_right = not self.__looking_right
 
     def __collide_enemies(self, enemies: list):
         for enemy in enemies:
@@ -127,7 +144,7 @@ class Crab:
             frame_index = int((pyxel.frame_count / (c.fps / 30)) % len(walking_frames))
             self.sprite = walking_frames[frame_index]
 
-    def update_status(self, blocks: list, enemies, player):
+    def update_status(self, blocks: list, enemies, player, coins):
         # Update crab status by calling individual methods
         self.__update_animations()
         self.__update_position()
@@ -135,3 +152,4 @@ class Crab:
         self.__collide_blocks(blocks, )
         self.__collide_enemies(enemies)
         self.__collide_player(player)
+        self.__collide_coins(coins)
