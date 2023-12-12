@@ -125,13 +125,10 @@ class Turtle:
             self.__v_y += c.gravity
 
     def __turn_upside(self, player):
-        if abs((player.y - player.height) - (self.y + self.height)) < 2 and abs(player.x - self.x)<9 :
+        if abs((player.y - player.height) - (self.y + self.height)) < 2 and abs(player.x - self.x)<14 :
             if self.__time_since_last_punch == 0 or self.__time_since_last_punch > 20:
                 self.__punched = True
                 self.__time_since_last_punch = 1
-
-
-
 
     def __update_animations(self):
         if self.__turning_frames > 0:
@@ -145,7 +142,7 @@ class Turtle:
             self.__turning_frames -= 1
         elif self.__punched and self.__rebound_frames > 0:
             self.__v_x = 0
-            self.__v_y = -3
+            self.__v_y = -2.5
             self.sprite = c.s_turtle_upside_r
             self.__rebound_frames -= 1
         elif self.__punched and self.__rebound_frames == 0:

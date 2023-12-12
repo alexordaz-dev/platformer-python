@@ -64,7 +64,6 @@ class Mario:
         self.__mario_in_air = False
         self.__stopping = False
         self.__punch_block = False
-        self.__punch = False
         self.__collision_bottom_timer = 60
 
     # Here we initialize the values for the forces x and y acting on mario
@@ -139,14 +138,7 @@ class Mario:
                 if abs(block.y + block.height - self.y) <= c.collide and not collision_top:
                     collision_bottom = True
                     self.y = block.y + block.height + 3
-                    if self.__collision_bottom_timer > 0:
-                        self.__v_y = 0
-                        self.__collision_bottom_timer -= 3
-
-                    if self.__collision_bottom_timer == 0:
-                        self.__v_y = 1.9
-                        self.__collision_bottom_timer = 60
-
+                    self.__v_y = 1.9
 
                 elif abs(block.y - (self.y + self.height)) <= self.height and not collision_bottom:
 
@@ -159,8 +151,6 @@ class Mario:
                         self.__mario_in_air = False
                         self.y = block.y - self.height
                         self.__v_y = 0
-
-
 
     def __gravity_push(self):
 
