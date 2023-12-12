@@ -14,7 +14,7 @@ class Turtle:
         self.__initialize_sprite()
         self.__rebound_frames = 4
         self.__turned = False
-
+        self.__time_since_last_punch = 0
 
     @property
     def v_x(self):
@@ -125,8 +125,10 @@ class Turtle:
             self.__v_y += c.gravity
 
     def __turn_upside(self, player):
-        if abs((player.y - player.height) - (self.y + self.height)) < 2:
-            self.__punched = True
+        if abs((player.y - player.height) - (self.y + self.height)) < 2 and abs(player.x - self.x)<9 :
+            if self.__time_since_last_punch == 0 or self.__time_since_last_punch > 20:
+                self.__punched = True
+                self.__time_since_last_punch = 1
 
 
 
@@ -148,13 +150,15 @@ class Turtle:
             self.__rebound_frames -= 1
         elif self.__punched and self.__rebound_frames == 0:
             self.__punched = False
-            self.__turned = True
+            self.__time_since_last_punch = 0
+            if self.__turned:
+                self.__turned = False
+                self.__v_y = -3
+            else:
+                self.__turned = True
         elif self.__turned:
             self.__v_x = 0
             self.sprite = c.s_turtle_upside_r2
-
-
-
         else:
             # Animate walking with appropriate sprite frames
             self.__v_x = c.npc_v
@@ -164,6 +168,11 @@ class Turtle:
                 walking_frames = [c.s_turtle_walking_l1, c.s_turtle_walking_l2, c.s_turtle_walking_l3]
             frame_index = int((pyxel.frame_count / (c.fps / 30)) % len(walking_frames))
             self.sprite = walking_frames[frame_index]
+            self.__punched = False
+            self.__turned = False
+            self.__time_since_last_punch = 0
+            self.__rebound_frames = 4
+
 
     def update_status(self, blocks: list, enemies, player, coins):
         # Update turtle status by calling individual methods

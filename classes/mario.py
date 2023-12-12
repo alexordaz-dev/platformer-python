@@ -65,6 +65,7 @@ class Mario:
         self.__stopping = False
         self.__punch_block = False
         self.__punch = False
+        self.__collision_bottom_timer = 60
 
     # Here we initialize the values for the forces x and y acting on mario
     def __initialize_forces(self):
@@ -117,10 +118,8 @@ class Mario:
     def __is_colliding(self, entity):
         if (abs(entity.x - self.x) < entity.width and entity.x - self.width < self.x and
                 abs(entity.y - self.y) < self.height):  # check for collision
-            if entity.width == 256 and entity.x + 24 < self.x + self.width:  # check for a cliff
-                return False
-            else:
-                return True
+
+            return True
         else:
             return False
 
@@ -138,10 +137,16 @@ class Mario:
 
             if self.__is_colliding(block):  # check for collision
                 if abs(block.y + block.height - self.y) <= c.collide and not collision_top:
-                    self.__v_y = c.collide + 0.1
-                    self.y = block.y + block.height + 3
                     collision_bottom = True
-                    self.__punch_block = True
+                    self.y = block.y + block.height + 3
+                    if self.__collision_bottom_timer > 0:
+                        self.__v_y = 0
+                        self.__collision_bottom_timer -= 3
+
+                    if self.__collision_bottom_timer == 0:
+                        self.__v_y = 1.9
+                        self.__collision_bottom_timer = 60
+
 
                 elif abs(block.y - (self.y + self.height)) <= self.height and not collision_bottom:
 
@@ -154,6 +159,8 @@ class Mario:
                         self.__mario_in_air = False
                         self.y = block.y - self.height
                         self.__v_y = 0
+
+
 
     def __gravity_push(self):
 
@@ -188,6 +195,7 @@ class Mario:
             else:
                 self.sprite = c.s_mario_standing_l
 
+
     # This is the method that groups every method that mario needs to update,
     # this makes it easier to plug it on the board
     def update_status(self, blocks: list, enemies):
@@ -197,3 +205,4 @@ class Mario:
         self.__gravity_push()
         self.__collide_blocks(blocks)
         self.__collide_enemies(enemies)
+
