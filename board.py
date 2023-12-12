@@ -89,6 +89,7 @@ class Board:
         for coin in self.__coins:
             coin.update_status(self.__blocks, self.__enemies, self.__coins, self.player)  # Pass the player object here
         self.player.update_status(self.__blocks, self.__enemies)
+
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
 

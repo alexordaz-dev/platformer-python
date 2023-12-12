@@ -121,9 +121,6 @@ class Mario:
             return True
         else:
             return False
-
-
-
     def __collide_blocks(self, blocks: list, ):
         self.lateral_collision = False
 
@@ -181,7 +178,6 @@ class Mario:
                 self.sprite = c.s_mario_stop_l
             else:
                 self.sprite = c.s_mario_standing_l
-
 
     # This is the method that groups every method that mario needs to update,
     # this makes it easier to plug it on the board

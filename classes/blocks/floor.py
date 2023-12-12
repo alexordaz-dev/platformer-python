@@ -8,4 +8,3 @@ class Floor:
         self.sprite = (0, 8, 232, 8, 8)
         self.width = width
         self.height = 8
-
