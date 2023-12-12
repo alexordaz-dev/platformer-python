@@ -122,10 +122,7 @@ class Mario:
         else:
             return False
 
-    def __collide_enemies(self, enemies: list):
-        for enemy in enemies:
-            if self.__is_colliding(enemy):
-                self.die()
+
 
     def __collide_blocks(self, blocks: list, ):
         self.lateral_collision = False
@@ -194,5 +191,5 @@ class Mario:
         self.__detect_buttons()
         self.__gravity_push()
         self.__collide_blocks(blocks)
-        self.__collide_enemies(enemies)
+
 

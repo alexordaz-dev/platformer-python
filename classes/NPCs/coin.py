@@ -60,6 +60,9 @@ class Coin:
         else:
             return False
 
+    def __collide_player(self, player, coins: list):
+        if self.__is_colliding(player):
+            coins.remove(self)
     def __collide_enemies(self, enemies: list):
         for enemy in enemies:
             if self.__is_colliding(enemy):
@@ -108,10 +111,11 @@ class Coin:
 
     # This is the method that groups every method that mario needs to update,
     # this makes it easier to plug it on the board
-    def update_status(self, blocks: list, enemies, coins):
+    def update_status(self, blocks: list, enemies, coins, player):
         self.__update_animations()
         self.__update_position()
         self.__gravity_push()
         self.__collide_blocks(blocks)
         self.__collide_enemies(enemies)
         self.__collide_coins(coins)
+        self.__collide_player(player, coins)

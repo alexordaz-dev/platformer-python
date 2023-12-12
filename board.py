@@ -84,12 +84,11 @@ class Board:
             x += 16
 
     def update(self):
-        # For mario we only need to call the update method, this will do all the things for mario
         for enemy in self.__enemies:
             enemy.update_status(self.__blocks, self.__enemies, self.player, self.__coins)
         for coin in self.__coins:
-            coin.update_status(self.__blocks, self.__enemies, self.__coins)
-        self.player.update_status(self.__blocks, self.__enemies,)
+            coin.update_status(self.__blocks, self.__enemies, self.__coins, self.player)  # Pass the player object here
+        self.player.update_status(self.__blocks, self.__enemies)
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
 

@@ -102,16 +102,18 @@ class Turtle:
 
     def __collide_player(self, player):
         if self.__is_colliding(player):
-            # Adjust position and direction when colliding with the player
-            if self.x < player.x:
-                self.x = player.x - self.width
-                self.__turning_frames = c.turning_animation_frames
-                self.__looking_right = False
-            else:
-                self.x = player.x + player.width
-                self.__turning_frames = c.turning_animation_frames
-                self.__looking_right = True
-
+            if not self.__turned:
+                # Adjust position and direction when colliding with the player
+                if self.x < player.x:
+                    self.x = player.x - self.width
+                    self.__turning_frames = c.turning_animation_frames
+                    self.__looking_right = False
+                else:
+                    self.x = player.x + player.width
+                    self.__turning_frames = c.turning_animation_frames
+                    self.__looking_right = True
+            if self.__turned and self.__rebound_frames == 0:
+                self.y = 1000
     def __collide_blocks(self, blocks: list):
         for block in blocks:
             if self.__is_colliding(block):  # check for collision
@@ -169,7 +171,6 @@ class Turtle:
             self.__turned = False
             self.__time_since_last_punch = 0
             self.__rebound_frames = 4
-
 
     def update_status(self, blocks: list, enemies, player, coins):
         # Update turtle status by calling individual methods
