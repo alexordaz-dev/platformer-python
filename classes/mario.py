@@ -4,7 +4,8 @@ import constants as c
 
 
 class Mario:
-    def __init__(self, x: int, y: int,) -> None:
+
+    def __init__(self, x: int, y: int, ) -> None:
         # Here we initialize all the methods and properties we will be having for mario
         self.x = x
         self.y = y
@@ -17,6 +18,8 @@ class Mario:
         self.__money = 0
         self.__lives = 3
         self.first = True
+        self.__dead = None
+
     @property
     def v_x(self):
         return self.__v_x
@@ -60,6 +63,8 @@ class Mario:
         self.__dead = False
         self.__mario_in_air = False
         self.__stopping = False
+        self.__punch_block = False
+        self.__punch = False
 
     # Here we initialize the values for the forces x and y acting on mario
     def __initialize_forces(self):
@@ -133,15 +138,16 @@ class Mario:
 
             if self.__is_colliding(block):  # check for collision
                 if abs(block.y + block.height - self.y) <= c.collide and not collision_top:
-                    self.__v_y = c.collide+0.1
-                    self.y = block.y + block.height+3
+                    self.__v_y = c.collide + 0.1
+                    self.y = block.y + block.height + 3
                     collision_bottom = True
+                    self.__punch_block = True
 
                 elif abs(block.y - (self.y + self.height)) <= self.height and not collision_bottom:
 
                     if pyxel.btn(pyxel.KEY_SPACE):
                         self.__mario_in_air = True
-                        
+
                         self.__v_y = -c.jump_force
                     else:
                         collision_top = True

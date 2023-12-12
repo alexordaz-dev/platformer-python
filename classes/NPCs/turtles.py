@@ -12,6 +12,9 @@ class Turtle:
         self.height = c.NPCs_height
         self.__initialize_booleans()
         self.__initialize_sprite()
+        self.__rebound_frames = 4
+        self.__turned = False
+
 
     @property
     def v_x(self):
@@ -30,12 +33,14 @@ class Turtle:
         self.__turning_right = False
         self.__turning_left = False
         self.__turning_frames = 0
+        self.__punched = False
 
         # Determine initial looking direction based on velocity
         if self.__v_x > 0:
             self.__looking_right = True
         elif self.__v_x < 0:
             self.__looking_right = False
+
 
     def __initialize_sprite(self):
         # Set sprite based on current looking direction
@@ -119,6 +124,13 @@ class Turtle:
         if self.y < pyxel.height:
             self.__v_y += c.gravity
 
+    def __turn_upside(self, player):
+        if abs((player.y - player.height) - (self.y + self.height)) < 2:
+            self.__punched = True
+
+
+
+
     def __update_animations(self):
         if self.__turning_frames > 0:
             # Animate turning with appropriate sprite frames
@@ -129,12 +141,26 @@ class Turtle:
             self.sprite = turning_frames[frame_index]
             self.__v_x = 0
             self.__turning_frames -= 1
+        elif self.__punched and self.__rebound_frames > 0:
+            self.__v_x = 0
+            self.__v_y = -3
+            self.sprite = c.s_turtle_upside_r
+            self.__rebound_frames -= 1
+        elif self.__punched and self.__rebound_frames == 0:
+            self.__punched = False
+            self.__turned = True
+        elif self.__turned:
+            self.__v_x = 0
+            self.sprite = c.s_turtle_upside_r2
+
+
+
         else:
             # Animate walking with appropriate sprite frames
-            self.__v_x = 2
+            self.__v_x = c.npc_v
             walking_frames = [c.s_turtle_walking_r1, c.s_turtle_walking_r2, c.s_turtle_walking_r3]
             if not self.__looking_right:
-                self.__v_x = -2
+                self.__v_x = -c.npc_v
                 walking_frames = [c.s_turtle_walking_l1, c.s_turtle_walking_l2, c.s_turtle_walking_l3]
             frame_index = int((pyxel.frame_count / (c.fps / 30)) % len(walking_frames))
             self.sprite = walking_frames[frame_index]
@@ -148,3 +174,4 @@ class Turtle:
         self.__collide_enemies(enemies)
         self.__collide_player(player)
         self.__collide_coins(coins)
+        self.__turn_upside(player)
