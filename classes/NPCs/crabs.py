@@ -46,8 +46,16 @@ class Crab:
             self.sprite = c.s_crab_walking_l1
 
     def __update_position(self):
-        # Update the position of the crab, wrapping around the screen if necessary
-        if self.x > c.screen_width:
+        # Update the position of the turtle, wrapping around the screen if necessary
+        if self.x > c.screen_width and self.y > 150:
+            self.x = c.screen_width - 10
+            self.y = 10
+            self.__v_x = -self.__v_x
+        elif self.x < 0 and self.y > 150:
+            self.x = 10
+            self.y = 10
+            self.__v_x = -self.__v_x
+        elif self.x > c.screen_width:
             self.x = 0
         elif self.x < 0:
             self.x = c.screen_width

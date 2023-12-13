@@ -6,6 +6,7 @@ from classes.blocks.ground import Ground
 from classes.blocks.pow import Pow1
 from classes.NPCs.turtles import Turtle
 from classes.NPCs.crabs import Crab
+from classes.NPCs.bicho import Bicho
 from classes.NPCs.coin import Coin
 import constants
 
@@ -62,7 +63,9 @@ class Board:
             Turtle(120, 10, 2, 2),
             Turtle(360, 10, -2, 2),
             Crab(40, 70, 2, 2),
-            Crab(360, 70, -2, 2)
+            Crab(360, 70, -2, 2),
+            Bicho(150, 10, 2, 2),
+            Bicho(300, 10, 2, 2)
         ]
 
     def generate_blocks(self):

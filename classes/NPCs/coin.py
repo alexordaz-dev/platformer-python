@@ -41,14 +41,24 @@ class Coin:
     # This is the method that detects every button pressed and stores information to give it to other methods
 
     # This is the method that changes mario's position every frame
-    def __update_position(self):  # changes the player position
-        if self.x > c.screen_width:
+    def __update_position(self):
+        # Update the position of the turtle, wrapping around the screen if necessary
+        if self.x > c.screen_width and self.y > 150:
+            self.x = c.screen_width -10
+            self.y = 10
+            self.__v_x = -self.__v_x
+        elif self.x < 0 and self.y > 150:
+            self.x = 10
+            self.y = 10
+            self.__v_x = -self.__v_x
+        elif self.x > c.screen_width:
             self.x = 0
         elif self.x < 0:
             self.x = c.screen_width
         else:
             self.x += self.__v_x
             self.y += self.__v_y
+
 
     def __is_colliding(self, entity):
         if (abs(entity.x - self.x) < entity.width and entity.x - self.width < self.x and

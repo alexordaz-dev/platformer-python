@@ -2,7 +2,7 @@ import pyxel
 import constants as c
 
 
-class Turtle:
+class Bicho:
     def __init__(self, x: int, y: int, __v_x: int, __v_y: int) -> None:
         self.x = x
         self.y = y
@@ -11,7 +11,7 @@ class Turtle:
         self.width = c.NPCS_width
         self.height = c.NPCs_height
         self.__initialize_booleans()
-        self.__initialize_sprite()
+        self.sprite = c.s_bicho_1
         self.__rebound_frames = 4
         self.__turned = False
         self.__time_since_last_punch = 0
@@ -40,14 +40,11 @@ class Turtle:
             self.__looking_right = True
         elif self.__v_x < 0:
             self.__looking_right = False
+    def jump(self):
+        if self.__v_y == 0:
+            self.__v_y = -c.jump_speed
 
 
-    def __initialize_sprite(self):
-        # Set sprite based on current looking direction
-        if self.__looking_right:
-            self.sprite = c.s_turtle_walking_r1
-        else:
-            self.sprite = c.s_turtle_walking_l1
 
     def __update_position(self):
         # Update the position of the turtle, wrapping around the screen if necessary
@@ -128,6 +125,7 @@ class Turtle:
                 # Adjust position and stop vertical movement when colliding with blocks
                 self.y = block.y - self.height
                 self.__v_y = 0
+                self.jump()
 
     def __gravity_push(self):
         # Apply gravity force to the turtle if it is not at the bottom of the screen
@@ -143,8 +141,8 @@ class Turtle:
     def __update_animations(self):
         if self.__turning_frames > 0:
             # Animate turning with appropriate sprite frames
-            turning_frames = [c.s_turtle_turning_r1, c.s_turtle_turning_r2] if self.__looking_right else [
-                c.s_turtle_turning_l1, c.s_turtle_turning_l2]
+            turning_frames = [c.s_bicho_1, c.s_bicho_1] if self.__looking_right else [
+                c.s_bicho_1, c.s_bicho_1]
             frame_index = int(((c.turning_animation_frames - self.__turning_frames) / c.turning_animation_frames) * len(
                 turning_frames))
             self.sprite = turning_frames[frame_index]
@@ -153,7 +151,7 @@ class Turtle:
         elif self.__punched and self.__rebound_frames > 0:
             self.__v_x = 0
             self.__v_y = -2.5
-            self.sprite = c.s_turtle_upside_r
+            self.sprite = c.s_bichoupsidedown_1
             self.__rebound_frames -= 1
         elif self.__punched and self.__rebound_frames == 0:
             self.__punched = False
@@ -165,14 +163,14 @@ class Turtle:
                 self.__turned = True
         elif self.__turned:
             self.__v_x = 0
-            self.sprite = c.s_turtle_upside_r2
+            self.sprite = c.s_bichoupsidedown_2
         else:
             # Animate walking with appropriate sprite frames
             self.__v_x = c.npc_v
-            walking_frames = [c.s_turtle_walking_r1, c.s_turtle_walking_r2, c.s_turtle_walking_r3]
+            walking_frames = [c.s_bicho_1, c.s_bicho_2, c.s_bicho_3]
             if not self.__looking_right:
                 self.__v_x = -c.npc_v
-                walking_frames = [c.s_turtle_walking_l1, c.s_turtle_walking_l2, c.s_turtle_walking_l3]
+                walking_frames = [c.s_bicho_1,c.s_bicho_2, c.s_bicho_3]
             frame_index = int((pyxel.frame_count / (c.fps / 30)) % len(walking_frames))
             self.sprite = walking_frames[frame_index]
             self.__punched = False

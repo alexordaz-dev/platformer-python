@@ -137,6 +137,15 @@ s_greenfourfireball_5 = (0, 126, 96, 16, 16)
 s_greenbreakfireball_1 = (0, 142, 96, 16, 16)
 s_greenbreakfireball_2 = (0, 158, 96, 16, 16)
 s_greenbreakfireball_3 = (0, 174, 96, 16, 16)
+# ---------------------------------------------------------bicho
+s_bicho_1 = (0, 0, 56, 16, 16)
+s_bicho_2 = (0, 16, 56, 16, 16)
+s_bicho_3 = (0, 32, 56, 16, 16)
+s_bicho_4 = (0, 48, 56, 16, 16)
+s_bichoupsidedown_1 = (0, 64, 56, 16, 16)
+s_bichoupsidedown_2 = (0, 80, 56, 16, 16)
+
+
 
 # ---------------------------------------------------------coin
 s_coin_3 = (0, 0, 208, 8, 16)
@@ -160,3 +169,4 @@ max_v_y = 2
 npc_v = 1
 collision_timer = 0
 collision_duration = 60
+jump_speed = 5
