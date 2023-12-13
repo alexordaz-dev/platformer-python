@@ -121,6 +121,7 @@ class Mario:
             return True
         else:
             return False
+
     def __collide_blocks(self, blocks: list, ):
         self.lateral_collision = False
 
@@ -187,5 +188,3 @@ class Mario:
         self.__detect_buttons()
         self.__gravity_push()
         self.__collide_blocks(blocks)
-
-

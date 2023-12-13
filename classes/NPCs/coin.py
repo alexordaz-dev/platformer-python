@@ -73,6 +73,7 @@ class Coin:
     def __collide_player(self, player, coins: list):
         if self.__is_colliding(player):
             coins.remove(self)
+
     def __collide_enemies(self, enemies: list):
         for enemy in enemies:
             if self.__is_colliding(enemy):
@@ -92,6 +93,7 @@ class Coin:
                 self.__coin_in_air = False
                 self.y = block.y - self.height
                 self.__v_y = 0
+
     def __collide_coins(self, coins: list):
         for coin in coins:
             if coin is not self and self.__is_colliding(coin):
@@ -107,6 +109,7 @@ class Coin:
 
                 self.__v_x = -self.__v_x
                 self.__looking_right = not self.__looking_right
+
     def __gravity_push(self):
 
         if self.y < pyxel.height:

@@ -13,23 +13,31 @@ import constants
 
 class Board:
 
-    def __init__(self, ):
+    def __init__(self):
         self.__blocks = None
         self.width = int(constants.screen_width)
         self.height = int(constants.screen_height)
-        # For mario here we name an object called player
-        self.player = Mario(int(self.width / 2), 170, )
+        self.player = Mario(int(self.width / 2), 170)
         pyxel.init(self.width, self.height)
         pyxel.load("assets/sprites.pyxres")
         self.initialize_pipes()
         self.initialize_floor()
-        self.generate_blocks()
+        self.__current_level = 1  # Inicializa __current_level antes de llamar a generate_blocks
+        self.generate_blocks(self.__current_level)
         self.create_ground()
         self.generate_enemies()
         self.generate_coins()
         pyxel.run(self.update, self.draw)
 
+    @property
+    def current_level(self):
+        return self.__current_level
+
+    @current_level.setter
+    def current_level(self, value):
+        self.__current_level = value
     def initialize_pipes(self):
+
         self.__pipes = [
             Pipes(0, 20, "left", "no_straight"),
             Pipes(368, 20, "right", "no_straight"),
@@ -38,18 +46,20 @@ class Board:
         ]
 
     def initialize_floor(self):
-        self.floor = self.create_floor(0, 55, 25)
-        self.floor2 = self.create_floor(225, 55, 25)
-        self.floor3 = self.create_floor(120, 100, 23)
-        self.floor4 = self.create_floor(0, 110, 6)
-        self.floor5 = self.create_floor(358, 110, 6)
-        self.floor6 = self.create_floor(0, 150, 23)
-        self.floor7 = self.create_floor(239, 150, 23)
+        self.__flor = [
+            self.create_floor(0, 55, 25),
+            self.create_floor(225, 55, 25),
+            self.create_floor(120, 100, 23),
+            self.create_floor(0, 110, 6),
+            self.create_floor(358, 110, 6),
+            self.create_floor(0, 150, 23),
+            self.create_floor(239, 150, 23),
+        ]
 
-    def create_floor(self, x, y, count):
+    def create_floor(self, x, y, count,):
         floors = []
         for i in range(count):
-            floors.append(Floor(x, y, 1))
+            floors.append(Floor(x, y))
             x += 7
         return floors
 
@@ -59,6 +69,7 @@ class Board:
                         ]
 
     def generate_enemies(self):
+<<<<<<< Updated upstream
         self.__enemies = [
             Turtle(120, 10, 2, 2),
             Turtle(360, 10, -2, 2),
@@ -67,16 +78,18 @@ class Board:
             Bicho(150, 10, 2, 2),
             Bicho(300, 10, 2, 2)
         ]
+=======
+        if self.current_level == 1:
+            self.__enemies = [
+                Turtle(120, 10, 2, 2),
+                Turtle(360, 10, -2, 2),
+                Crab(40, 70, 2, 2),
+                Crab(360, 70, -2, 2)
+            ]
+>>>>>>> Stashed changes
 
-    def generate_blocks(self):
+    def generate_blocks(self, current_level):
         self.__blocks = [
-            Floor(0, 150, 160),
-            Floor(239, 150, 160),
-            Floor(225, 55, 170),
-            Floor(120, 100, 155),
-            Floor(0, 110, 54),
-            Floor(358, 110, 60),
-            Floor(0, 55, 170),
             Pow1(192, 150, 16)
         ]
 
@@ -87,20 +100,33 @@ class Board:
             x += 16
 
     def update(self):
+        for floor_list in self.__flor:
+            for floor in floor_list:
+                floor.update_status(self.__current_level)
         for enemy in self.__enemies:
             enemy.update_status(self.__blocks, self.__enemies, self.player, self.__coins)
         for coin in self.__coins:
             coin.update_status(self.__blocks, self.__enemies, self.__coins, self.player)  # Pass the player object here
         self.player.update_status(self.__blocks, self.__enemies)
-
+        self.levels(self.__current_level)
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
 
+    def levels(self, level):
+        if all(enemy.dead for enemy in self.__enemies):
+            pyxel.cls(0)
+            pyxel.text(80, 80, f'¡Nivel {level + 1}!', 7)
+            pyxel.flip()
+
+            self.__current_level += 1
+            self.initialize_pipes()
+            self.initialize_floor()
+            self.generate_blocks(self.__current_level)
+            self.create_ground()
+            self.generate_enemies()
+
     def draw(self):
         pyxel.cls(0)
-        # For mario we then draw his position and his firs sprite
-        pyxel.blt(self.player.x, self.player.y, *self.player.sprite)
-
         for enemy in self.__enemies:
             pyxel.blt(enemy.x, enemy.y, *enemy.sprite)
 
@@ -110,8 +136,11 @@ class Board:
         for pipe in self.__pipes:
             pyxel.blt(pipe.x, pipe.y, *pipe.sprite)
 
-        for floors in self.floor + self.floor2 + self.floor3 + self.floor4 + self.floor5 + self.floor6 + self.floor7:
-            pyxel.blt(floors.x, floors.y, *floors.sprite)
+        for floor_list in self.__flor:
+            for floor in floor_list:
+                pyxel.blt(floor.x, floor.y, *floor.sprite)
 
         for grounds in self.__blocks:
             pyxel.blt(grounds.x, grounds.y, *grounds.sprite)
+
+

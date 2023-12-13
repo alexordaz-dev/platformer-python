@@ -15,6 +15,7 @@ class Turtle:
         self.__rebound_frames = 4
         self.__turned = False
         self.__time_since_last_punch = 0
+        self.__die = False
 
     @property
     def v_x(self):
@@ -28,6 +29,18 @@ class Turtle:
     def v_y(self):
         return self.__v_y
 
+    @property
+    def dead(self):
+        return self.__dead
+
+    @dead.setter
+    def dead(self, new):
+        self.__dead = new
+
+    def __dead(self):
+        if self.__die:
+            self.__dead = True
+
     def __initialize_booleans(self):
         # Initialize boolean flags for turning and looking direction
         self.__turning_right = False
@@ -40,7 +53,6 @@ class Turtle:
             self.__looking_right = True
         elif self.__v_x < 0:
             self.__looking_right = False
-
 
     def __initialize_sprite(self):
         # Set sprite based on current looking direction
@@ -121,7 +133,8 @@ class Turtle:
                     self.__turning_frames = c.turning_animation_frames
                     self.__looking_right = True
             if self.__turned and self.__rebound_frames == 0:
-                self.y = 1000
+                self.__die = True
+
     def __collide_blocks(self, blocks: list):
         for block in blocks:
             if self.__is_colliding(block):  # check for collision
@@ -135,7 +148,7 @@ class Turtle:
             self.__v_y += c.gravity
 
     def __turn_upside(self, player):
-        if abs((player.y - player.height) - (self.y + self.height)) < 2 and abs(player.x - self.x)<14 :
+        if abs((player.y - player.height) - (self.y + self.height)) < 2 and abs(player.x - self.x) < 14:
             if self.__time_since_last_punch == 0 or self.__time_since_last_punch > 20:
                 self.__punched = True
                 self.__time_since_last_punch = 1
