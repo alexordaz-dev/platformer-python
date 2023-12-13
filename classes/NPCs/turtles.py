@@ -126,6 +126,7 @@ class Turtle:
     def __collide_player(self, player):
         if self.__is_colliding(player):
             if not self.__turned:
+                player.dead = True
                 # Adjust position and direction when colliding with the player
                 if self.x < player.x:
                     self.x = player.x - self.width

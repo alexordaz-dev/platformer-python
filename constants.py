@@ -170,3 +170,4 @@ npc_v = 1
 collision_timer = 0
 collision_duration = 60
 jump_speed = 5
+bicho_jump = 4

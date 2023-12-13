@@ -18,19 +18,11 @@ class Mario:
         self.__money = 0
         self.__lives = 3
         self.first = True
-        self.__dead = None
+        self.__dead = False
 
     @property
     def v_x(self):
         return self.__v_x
-
-    @property
-    def dead(self):
-        return self.__dead
-
-    @dead.setter
-    def dead(self, new):
-        self.__dead = new
 
     @property
     def lives(self):
@@ -56,6 +48,21 @@ class Mario:
     def sprite(self, new_sprite: list):
         self.__sprite = new_sprite
 
+    @property
+    def dead(self):
+        return self.__dead
+
+    @dead.setter
+    def dead(self, new):
+        self.__dead = new
+
+    def set_dead(self):
+        if self.__dead:
+            self.__dead = True
+
+    def should_be_removed(self):
+        return self.__dead
+
     # Here we initialize the values that ar true or False
     def __initialize_booleans(self):
         self.__looking_right = True
@@ -73,11 +80,17 @@ class Mario:
 
     def die(self):
         self.__lives -= 1
-        self.dead = True
-        if self.__lives == 0:
-            quit()
+        if self.__lives > 0:
+            self.dead = True
+            self.x = c.screen_width // 2
+            self.y = 170
+            # Actualiza la lista de sprites de vidas en el tablero
+            self.update_life_sprites(self.__lives)
+        else:
+            pass
 
-        # This is the method that detects every button pressed and stores information to give it to other methods
+
+    # This is the method that detects every button pressed and stores information to give it to other methods
 
     def __detect_buttons(self):
         if pyxel.btn(pyxel.KEY_D):
@@ -188,3 +201,4 @@ class Mario:
         self.__detect_buttons()
         self.__gravity_push()
         self.__collide_blocks(blocks)
+

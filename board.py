@@ -15,6 +15,8 @@ import random
 class Board:
 
     def __init__(self):
+        self.__lives = 3
+        self.__game_over = False
         self.__time_since_last_coin = 0
         self.__time_since_last_enemy = 0
         self.__blocks = None
@@ -25,7 +27,7 @@ class Board:
         pyxel.load("assets/sprites.pyxres")
         self.initialize_pipes()
         self.initialize_floor()
-        self.__current_level = 1  # Inicializa __current_level antes de llamar a generate_blocks
+        self.__current_level = 1  # Initialize __current_level before calling generate_blocks
         self.generate_blocks(self.__current_level)
         self.create_ground()
         self.generate_enemies()
@@ -41,9 +43,7 @@ class Board:
     def current_level(self, value):
         self.__current_level = value
 
-
     def initialize_pipes(self):
-
         self.__pipes = [
             Pipes(0, 20, "left", "no_straight"),
             Pipes(368, 20, "right", "no_straight"),
@@ -52,7 +52,7 @@ class Board:
         ]
 
     def initialize_floor(self):
-        self.__flor = [
+        self.__floor = [
             self.create_floor(0, 55, 25),
             self.create_floor(225, 55, 25),
             self.create_floor(120, 100, 23),
@@ -62,7 +62,7 @@ class Board:
             self.create_floor(239, 150, 23),
         ]
 
-    def create_floor(self, x, y, count,):
+    def create_floor(self, x, y, count):
         floors = []
         for i in range(count):
             floors.append(Floor(x, y))
@@ -70,8 +70,7 @@ class Board:
         return floors
 
     def generate_coins(self):
-        self.__coins = [
-                        ]
+        self.__coins = []
 
     def generate_enemies(self):
         self.__enemies = [
@@ -83,15 +82,13 @@ class Board:
             Bicho(300, 10, 2, 2)
         ]
         if self.current_level == 1:
-            self.__enemies = [
-
-            ]
+            self.__enemies = []
 
     def generate_blocks(self, current_level):
         self.__blocks = [
             Pow1(192, 150, 16)
         ]
-        for floor_list in self.__flor:
+        for floor_list in self.__floor:
             self.__blocks.extend(floor_list)
 
     def create_ground(self):
@@ -108,22 +105,31 @@ class Board:
         self.create_ground()
         self.generate_enemies()
 
+    def handle_player_death(self):
+        self.__lives -= 1
+
+        if self.__lives > 0:
+            self.player = Mario(int(constants.screen_width / 2), 170)
+            if self.__lives == 2:
+                pyxel.blt(20, 10, *(0, 200, 56, 11, 9))
+            elif self.__lives == 1:
+                pyxel.blt(35, 10, *(0, 200, 56, 11, 9))
+        else:
+            quit()
+
     def update(self):
-
-        self.player.update_status(self.__blocks, self.__enemies)
-        self.update_enemies_and_coins()
-
-
-
-        # Generar un nuevo enemigo cada 15 segundos
-
+        if not self.player.should_be_removed():
+            self.player.update_status(self.__blocks, self.__enemies)
+            self.update_enemies_and_coins()
+        else:
+            self.handle_player_death()
 
     def update_enemies_and_coins(self):
         if self.__time_since_last_enemy >= 100 and len(self.__enemies) < 30:
             last_enemy = self.__enemies[-1] if self.__enemies else None
             new_enemy_x = 0 if not last_enemy or last_enemy.x == 400 else 400
-            new_enemy_speed = 2 if not last_enemy or last_enemy.x == 400 else -2  # Alterna entre 2 y -2
-            self.n = random.randint(1,3)
+            new_enemy_speed = 2 if not last_enemy or last_enemy.x == 400 else -2
+            self.n = random.randint(1, 3)
             if self.n == 1:
                 new_enemy = Turtle(new_enemy_x, 18, new_enemy_speed, 2)
             elif self.n == 2:
@@ -139,7 +145,7 @@ class Board:
         if self.__time_since_last_coin >= 400:
             last_coin = self.__coins[-1] if self.__coins else None
             new_coin_x = 0 if not last_coin or last_coin.x == 116 else 116
-            new_coin_speed = 2 if not last_coin or last_coin.x == 116 else -2  # Alterna entre 2 y -2
+            new_coin_speed = 2 if not last_coin or last_coin.x == 116 else -2
             new_coin = Coin(new_coin_x, 18, new_coin_speed, 2)
 
             self.__coins.append(new_coin)
@@ -160,9 +166,8 @@ class Board:
     def levels(self):
         if all(enemy.dead for enemy in self.__enemies):
             pyxel.cls(0)
-            pyxel.text(80, 80, f'¡Nivel {self.__current_level + 1}!', 7)
+            pyxel.text(80, 80, f'Level {self.__current_level + 1}!', 7)
             pyxel.flip()
-
             self.reset(self.__current_level + 1)
 
     def draw(self):
@@ -177,10 +182,15 @@ class Board:
         for pipe in self.__pipes:
             pyxel.blt(pipe.x, pipe.y, *pipe.sprite)
 
-        for grounds in self.__blocks:
-            pyxel.blt(grounds.x, grounds.y, *grounds.sprite)
-        pyxel.blt(20, 10, *(0,2,3,11, 9))
-        pyxel.blt(35, 10, *(0,2,3,11,9))
-        pyxel.blt(50, 10, *(0,2,3,11,9))
+        for ground in self.__blocks:
+            pyxel.blt(ground.x, ground.y, *ground.sprite)
 
-
+        if self.__lives == 3:
+            pyxel.blt(20, 10, *(0, 2, 3, 11, 9))
+            pyxel.blt(35, 10, *(0, 2, 3, 11, 9))
+            pyxel.blt(50, 10, *(0, 2, 3, 11, 9))
+        elif self.__lives == 2:
+            pyxel.blt(35, 10, *(0, 2, 3, 11, 9))
+            pyxel.blt(50, 10, *(0, 2, 3, 11, 9))
+        elif self.__lives == 1:
+            pyxel.blt(50, 10, *(0, 2, 3, 11, 9))

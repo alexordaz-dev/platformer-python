@@ -125,6 +125,7 @@ class Crab:
 
     def __collide_player(self, player):
         if self.__is_colliding(player):
+            player.dead = True
             if not self.__turned:
                 # Adjust position and direction when colliding with the player
                 if self.x < player.x:
@@ -164,7 +165,7 @@ class Crab:
                 self.__time_since_last_angry = 1
 
     def __update_animations(self, player):
-        if self.__turned and self.__is_colliding(player):
+        if self.__angry and self.__is_colliding(player):
             self.__dead = True  # Set crab as dead when the death animation is complete
         elif self.__turning_frames > 0:
             # Animate turning with appropriate sprite frames
@@ -203,7 +204,7 @@ class Crab:
         elif self.__angry:
             self.__punched = True
             self.__turned = False
-            self.__v_x = c.npc_v * 2  # Ajustar la velocidad enfadada
+            self.__v_x = c.npc_v * 2
             angry_frames = [c.s_crab_angry_1, c.s_crab_angry_2, c.s_crab_angry_3]
             frame_index = int(
                 (pyxel.frame_count / (c.fps / 30)) % len(angry_frames)
@@ -211,17 +212,14 @@ class Crab:
             self.sprite = angry_frames[frame_index]
 
             if self.__turned:
-                 # Si está girado, reproduce la animación de upside down
+
                 upside_frames = [c.s_crab_die_1, c.s_crab_die_2]
                 frame_index = int(
                     (pyxel.frame_count / (c.fps / 30)) % len(upside_frames)
                  )
                 self.sprite = upside_frames[frame_index]
 
-                # También puedes añadir lógica adicional aquí, como detener el movimiento lateral si es necesario
                 self.__v_x = 0
-
-                # Lógica para cambiar al estado "upside down" si se gira nuevamente
                 if self.__time_since_last_punch == 0 or self.__time_since_last_punch > 20:
                     self.__punched = True
                     self.__turned = False

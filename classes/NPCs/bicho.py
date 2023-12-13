@@ -15,7 +15,7 @@ class Bicho:
         self.__rebound_frames = 4
         self.__turned = False
         self.__time_since_last_punch = 0
-        self.__die = False
+        self.__dead = False
 
     @property
     def v_x(self):
@@ -37,10 +37,12 @@ class Bicho:
     def dead(self, new):
         self.__dead = new
 
-    def __dead(self):
-        if self.__die:
+    def set_dead(self):
+        if self.__dead:
             self.__dead = True
 
+    def should_be_removed(self):
+        return self.__dead
     def __initialize_booleans(self):
         # Initialize boolean flags for turning and looking direction
         self.__turning_right = False
@@ -56,7 +58,7 @@ class Bicho:
 
     def jump(self):
         if self.__v_y == 0:
-            self.__v_y = -c.jump_speed
+            self.__v_y = -c.bicho_jump
 
     def __update_position(self):
         # Update the position of the turtle, wrapping around the screen if necessary
@@ -120,6 +122,7 @@ class Bicho:
     def __collide_player(self, player):
         if self.__is_colliding(player):
             if not self.__turned:
+                player.dead = True
                 # Adjust position and direction when colliding with the player
                 if self.x < player.x:
                     self.x = player.x - self.width
@@ -129,8 +132,8 @@ class Bicho:
                     self.x = player.x + player.width
                     self.__turning_frames = c.turning_animation_frames
                     self.__looking_right = True
-            if self.__turned and self.__rebound_frames == 0:
-                self.y = 1000
+            if self.__turned:
+                self.set_dead()
 
     def __collide_blocks(self, blocks: list):
         for block in blocks:
@@ -138,7 +141,7 @@ class Bicho:
                 # Adjust position and stop vertical movement when colliding with blocks
                 self.y = block.y - self.height
                 self.__v_y = 0
-                self.jump()
+                if not self.__turned: self.jump()
 
     def __gravity_push(self):
         # Apply gravity force to the turtle if it is not at the bottom of the screen
@@ -146,12 +149,14 @@ class Bicho:
             self.__v_y += c.gravity
 
     def __turn_upside(self, player):
-        if abs((player.y - player.height) - (self.y + self.height)) < 2 and abs(player.x - self.x) < 14:
+        if abs((player.y - player.height) - (self.y + self.height)) < 1 and abs(player.x - self.x) < 14:
             if self.__time_since_last_punch == 0 or self.__time_since_last_punch > 20:
                 self.__punched = True
                 self.__time_since_last_punch = 1
 
-    def __update_animations(self):
+    def __update_animations(self,player):
+        if self.__turned and self.__is_colliding(player):
+            self.__dead = True  # Set turtle as dead when the death animation is complete
         if self.__turning_frames > 0:
             # Animate turning with appropriate sprite frames
             turning_frames = [c.s_bicho_1, c.s_bicho_1] if self.__looking_right else [
@@ -193,7 +198,7 @@ class Bicho:
 
     def update_status(self, blocks: list, enemies, player, coins):
         # Update turtle status by calling individual methods
-        self.__update_animations()
+        self.__update_animations(player)
         self.__update_position()
         self.__gravity_push()
         self.__collide_blocks(blocks, )
@@ -201,3 +206,4 @@ class Bicho:
         self.__collide_player(player)
         self.__collide_coins(coins)
         self.__turn_upside(player)
+        self.should_be_removed()
