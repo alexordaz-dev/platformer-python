@@ -72,7 +72,7 @@ class Coin:
 
     def __collide_player(self, player, coins: list):
         if self.__is_colliding(player):
-            coins.remove(self)
+            self.__dead = True
 
     def __collide_enemies(self, enemies: list):
         for enemy in enemies:

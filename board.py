@@ -9,11 +9,14 @@ from classes.NPCs.crabs import Crab
 from classes.NPCs.bicho import Bicho
 from classes.NPCs.coin import Coin
 import constants
+import random
 
 
 class Board:
 
     def __init__(self):
+        self.__time_since_last_coin = 0
+        self.__time_since_last_enemy = 0
         self.__blocks = None
         self.width = int(constants.screen_width)
         self.height = int(constants.screen_height)
@@ -28,6 +31,7 @@ class Board:
         self.generate_enemies()
         self.generate_coins()
         pyxel.run(self.update, self.draw)
+        self.__time_since_last_enemy = 0
 
     @property
     def current_level(self):
@@ -36,6 +40,7 @@ class Board:
     @current_level.setter
     def current_level(self, value):
         self.__current_level = value
+
 
     def initialize_pipes(self):
 
@@ -65,8 +70,7 @@ class Board:
         return floors
 
     def generate_coins(self):
-        self.__coins = [Coin(90, 10, 3, 3),
-                        Coin(300, 10, -2, 2)
+        self.__coins = [
                         ]
 
     def generate_enemies(self):
@@ -80,10 +84,7 @@ class Board:
         ]
         if self.current_level == 1:
             self.__enemies = [
-                Turtle(120, 10, 2, 2),
-                Turtle(360, 10, -2, 2),
-                Crab(40, 70, 2, 2),
-                Crab(360, 70, -2, 2)
+
             ]
 
     def generate_blocks(self, current_level):
@@ -108,17 +109,53 @@ class Board:
         self.generate_enemies()
 
     def update(self):
+
         self.player.update_status(self.__blocks, self.__enemies)
         self.update_enemies_and_coins()
 
+
+
+        # Generar un nuevo enemigo cada 15 segundos
+
+
     def update_enemies_and_coins(self):
+        if self.__time_since_last_enemy >= 100 and len(self.__enemies) < 30:
+            last_enemy = self.__enemies[-1] if self.__enemies else None
+            new_enemy_x = 0 if not last_enemy or last_enemy.x == 400 else 400
+            new_enemy_speed = 2 if not last_enemy or last_enemy.x == 400 else -2  # Alterna entre 2 y -2
+            self.n = random.randint(1,3)
+            if self.n == 1:
+                new_enemy = Turtle(new_enemy_x, 18, new_enemy_speed, 2)
+            elif self.n == 2:
+                new_enemy = Crab(new_enemy_x, 18, new_enemy_speed, 2)
+            else:
+                new_enemy = Bicho(new_enemy_x, 18, new_enemy_speed, 2)
+
+            self.__enemies.append(new_enemy)
+            self.__time_since_last_enemy = 0
+        else:
+            self.__time_since_last_enemy += 1
+
+        if self.__time_since_last_coin >= 400:
+            last_coin = self.__coins[-1] if self.__coins else None
+            new_coin_x = 0 if not last_coin or last_coin.x == 116 else 116
+            new_coin_speed = 2 if not last_coin or last_coin.x == 116 else -2  # Alterna entre 2 y -2
+            new_coin = Coin(new_coin_x, 18, new_coin_speed, 2)
+
+            self.__coins.append(new_coin)
+            self.__time_since_last_coin = 0
+        else:
+            self.__time_since_last_coin += 1
+
         for enemy in self.__enemies:
             enemy.update_status(self.__blocks, self.__enemies, self.player, self.__coins)
+
+        self.__enemies = [enemy for enemy in self.__enemies if not enemy.should_be_removed()]
 
         for coin in self.__coins:
             coin.update_status(self.__blocks, self.__enemies, self.__coins, self.player)
 
-
+        self.__coins = [coin for coin in self.__coins if not coin.dead]
 
     def levels(self):
         if all(enemy.dead for enemy in self.__enemies):
@@ -142,5 +179,8 @@ class Board:
 
         for grounds in self.__blocks:
             pyxel.blt(grounds.x, grounds.y, *grounds.sprite)
+        pyxel.blt(20, 10, *(0,2,3,11, 9))
+        pyxel.blt(35, 10, *(0,2,3,11,9))
+        pyxel.blt(50, 10, *(0,2,3,11,9))
 
 
