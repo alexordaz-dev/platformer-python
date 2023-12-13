@@ -36,6 +36,7 @@ class Board:
     @current_level.setter
     def current_level(self, value):
         self.__current_level = value
+
     def initialize_pipes(self):
 
         self.__pipes = [
@@ -69,7 +70,6 @@ class Board:
                         ]
 
     def generate_enemies(self):
-<<<<<<< Updated upstream
         self.__enemies = [
             Turtle(120, 10, 2, 2),
             Turtle(360, 10, -2, 2),
@@ -78,7 +78,6 @@ class Board:
             Bicho(150, 10, 2, 2),
             Bicho(300, 10, 2, 2)
         ]
-=======
         if self.current_level == 1:
             self.__enemies = [
                 Turtle(120, 10, 2, 2),
@@ -86,12 +85,13 @@ class Board:
                 Crab(40, 70, 2, 2),
                 Crab(360, 70, -2, 2)
             ]
->>>>>>> Stashed changes
 
     def generate_blocks(self, current_level):
         self.__blocks = [
             Pow1(192, 150, 16)
         ]
+        for floor_list in self.__flor:
+            self.__blocks.extend(floor_list)
 
     def create_ground(self):
         x = 0
@@ -99,34 +99,38 @@ class Board:
             self.__blocks.append(Ground(x, constants.ground_height))
             x += 16
 
+    def reset(self, level):
+        self.__current_level = level
+        self.initialize_pipes()
+        self.initialize_floor()
+        self.generate_blocks(self.__current_level)
+        self.create_ground()
+        self.generate_enemies()
+
     def update(self):
-        for floor_list in self.__flor:
-            for floor in floor_list:
-                floor.update_status(self.__current_level)
+        self.player.update_status(self.__blocks, self.__enemies)
+        self.update_enemies_and_coins()
+
+    def update_enemies_and_coins(self):
         for enemy in self.__enemies:
             enemy.update_status(self.__blocks, self.__enemies, self.player, self.__coins)
-        for coin in self.__coins:
-            coin.update_status(self.__blocks, self.__enemies, self.__coins, self.player)  # Pass the player object here
-        self.player.update_status(self.__blocks, self.__enemies)
-        self.levels(self.__current_level)
-        if pyxel.btnp(pyxel.KEY_Q):
-            pyxel.quit()
 
-    def levels(self, level):
+        for coin in self.__coins:
+            coin.update_status(self.__blocks, self.__enemies, self.__coins, self.player)
+
+
+
+    def levels(self):
         if all(enemy.dead for enemy in self.__enemies):
             pyxel.cls(0)
-            pyxel.text(80, 80, f'¡Nivel {level + 1}!', 7)
+            pyxel.text(80, 80, f'¡Nivel {self.__current_level + 1}!', 7)
             pyxel.flip()
 
-            self.__current_level += 1
-            self.initialize_pipes()
-            self.initialize_floor()
-            self.generate_blocks(self.__current_level)
-            self.create_ground()
-            self.generate_enemies()
+            self.reset(self.__current_level + 1)
 
     def draw(self):
         pyxel.cls(0)
+        pyxel.blt(self.player.x, self.player.y, *self.player.sprite)
         for enemy in self.__enemies:
             pyxel.blt(enemy.x, enemy.y, *enemy.sprite)
 
@@ -135,10 +139,6 @@ class Board:
 
         for pipe in self.__pipes:
             pyxel.blt(pipe.x, pipe.y, *pipe.sprite)
-
-        for floor_list in self.__flor:
-            for floor in floor_list:
-                pyxel.blt(floor.x, floor.y, *floor.sprite)
 
         for grounds in self.__blocks:
             pyxel.blt(grounds.x, grounds.y, *grounds.sprite)

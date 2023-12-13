@@ -1,29 +1,20 @@
 class Floor:
-
-    def __init__(self, x: int, y: int, ):
-
+    def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.__sprite = ()
+        self.sprite = self.get_floor_sprite(1)  # Inicializa el sprite con el nivel 1
         self.width = 7
         self.height = 7
+    def update_status(self, current_level):
+        # Cada 3 niveles, cambia el sprite del suelo
+        if current_level % 3 == 0:
+            self.sprite = self.get_floor_sprite(current_level)
 
-    @property
-    def sprite(self):
-        return self.__sprite
-
-    @sprite.setter
-    def sprite(self, new_sprite: list):
-        self.__sprite = new_sprite
-
-    def __sprite_change(self, level):
-        if level == 1 or 2 or 3:
-            self.__sprite = (0, 0, 8, 232, 8, 8)
-        elif level == 3 or 4 or 5:
-            self.__sprite = (0, 0, 8, 232, 8, 8)
+    def get_floor_sprite(self, level):
+        # Devuelve el sprite de suelo basado en el nivel
+        if level % 3 == 0:
+            # Cambia el sprite cada 3 niveles
+            return (0,7,232,8,8)
         else:
-            self.__sprite = (0, 0, 8, 232, 8, 8)
-
-    def update_status(self, level):
-        # Update turtle status by calling individual methods
-        self.__sprite_change(level)
+            # Usa el sprite predeterminado para otros niveles
+            return (0,0,224,8, 8)

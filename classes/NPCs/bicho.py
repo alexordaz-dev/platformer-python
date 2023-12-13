@@ -15,6 +15,7 @@ class Bicho:
         self.__rebound_frames = 4
         self.__turned = False
         self.__time_since_last_punch = 0
+        self.__die = False
 
     @property
     def v_x(self):
@@ -28,6 +29,18 @@ class Bicho:
     def v_y(self):
         return self.__v_y
 
+    @property
+    def dead(self):
+        return self.__dead
+
+    @dead.setter
+    def dead(self, new):
+        self.__dead = new
+
+    def __dead(self):
+        if self.__die:
+            self.__dead = True
+
     def __initialize_booleans(self):
         # Initialize boolean flags for turning and looking direction
         self.__turning_right = False
@@ -40,16 +53,15 @@ class Bicho:
             self.__looking_right = True
         elif self.__v_x < 0:
             self.__looking_right = False
+
     def jump(self):
         if self.__v_y == 0:
             self.__v_y = -c.jump_speed
 
-
-
     def __update_position(self):
         # Update the position of the turtle, wrapping around the screen if necessary
         if self.x > c.screen_width and self.y > 150:
-            self.x = c.screen_width -10
+            self.x = c.screen_width - 10
             self.y = 10
             self.__v_x = -self.__v_x
         elif self.x < 0 and self.y > 150:
@@ -119,6 +131,7 @@ class Bicho:
                     self.__looking_right = True
             if self.__turned and self.__rebound_frames == 0:
                 self.y = 1000
+
     def __collide_blocks(self, blocks: list):
         for block in blocks:
             if self.__is_colliding(block):  # check for collision
@@ -133,7 +146,7 @@ class Bicho:
             self.__v_y += c.gravity
 
     def __turn_upside(self, player):
-        if abs((player.y - player.height) - (self.y + self.height)) < 2 and abs(player.x - self.x)<14 :
+        if abs((player.y - player.height) - (self.y + self.height)) < 2 and abs(player.x - self.x) < 14:
             if self.__time_since_last_punch == 0 or self.__time_since_last_punch > 20:
                 self.__punched = True
                 self.__time_since_last_punch = 1
@@ -170,7 +183,7 @@ class Bicho:
             walking_frames = [c.s_bicho_1, c.s_bicho_2, c.s_bicho_3]
             if not self.__looking_right:
                 self.__v_x = -c.npc_v
-                walking_frames = [c.s_bicho_1,c.s_bicho_2, c.s_bicho_3]
+                walking_frames = [c.s_bicho_1, c.s_bicho_2, c.s_bicho_3]
             frame_index = int((pyxel.frame_count / (c.fps / 30)) % len(walking_frames))
             self.sprite = walking_frames[frame_index]
             self.__punched = False

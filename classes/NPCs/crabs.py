@@ -13,6 +13,8 @@ class Crab:
         self.height = c.NPCs_height
         self.__initialize_booleans()
         self.__initialize_sprint()
+        self.__die = False
+        self.__time_since_last_punch = 0
 
     @property
     def v_x(self):
@@ -25,6 +27,18 @@ class Crab:
     @property
     def v_y(self):
         return self.__v_y
+
+    @property
+    def dead(self):
+        return self.__dead
+
+    @dead.setter
+    def dead(self, new):
+        self.__dead = new
+
+    def __dead(self):
+        if self.__die:
+            self.__dead = True
 
     def __initialize_booleans(self):
         # Initialize boolean flags for turning and looking direction
@@ -132,6 +146,12 @@ class Crab:
         if self.y < pyxel.height:
             self.__v_y += c.gravity
 
+    def __turn_upside(self, player):
+        if abs((player.y - player.height) - (self.y + self.height)) < 2 and abs(player.x - self.x) < 14:
+            if self.__time_since_last_punch == 0 or self.__time_since_last_punch > 20:
+                self.__punched = True
+                self.__time_since_last_punch = 1
+
     def __update_animations(self):
         if self.__turning_frames > 0:
             # Animate turning with appropriate sprite frames
@@ -161,3 +181,4 @@ class Crab:
         self.__collide_enemies(enemies)
         self.__collide_player(player)
         self.__collide_coins(coins)
+        self.__dead()

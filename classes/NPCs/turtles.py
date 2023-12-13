@@ -133,7 +133,7 @@ class Turtle:
                     self.__turning_frames = c.turning_animation_frames
                     self.__looking_right = True
             if self.__turned and self.__rebound_frames == 0:
-                self.__die = True
+                self.die = True
 
     def __collide_blocks(self, blocks: list):
         for block in blocks:
@@ -142,6 +142,9 @@ class Turtle:
                 self.y = block.y - self.height
                 self.__v_y = 0
 
+    def should_be_removed(self):
+        return self.__dead
+    
     def __gravity_push(self):
         # Apply gravity force to the turtle if it is not at the bottom of the screen
         if self.y < pyxel.height:
